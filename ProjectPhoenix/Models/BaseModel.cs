@@ -11,7 +11,6 @@ namespace ProjectPhoenix.Models
         public BaseModel( Guid id) { }
 
         public virtual Guid id { get; set; }
-        public DateTime updateDate { get; set; }
         public DateTime createDate { get; set; }
         public DateTime modifyDate { get; set ; }
     }

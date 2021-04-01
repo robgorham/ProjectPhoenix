@@ -21,30 +21,49 @@ namespace ProjectPhoenix.Controllers
 
     public class BoardsController : ControllerBase
     {
-        private readonly IHttpContextAccessor _accessor;
-        private ApplicationDbContext _context;
-        public BoardsController (ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
+        public class BoardViewModel : BaseModel, IBoard
         {
-            _accessor = httpContextAccessor;
+            public BoardViewModel(Board board)
+            {
+                this.name = board.name;
+                this.username = board.user.UserName;
+                this.id = board.id;
+                this.createDate = board.createDate;
+                this.modifyDate = board.modifyDate;
+            }
+            public string name { get; set; }
+            public string username { get; set; }
+        }
+
+        private ApplicationDbContext _context;
+        private ApplicationUser _user;
+        public BoardsController (ApplicationDbContext context)
+        {
             _context = context;
+            
+        }
+
+        private void initUser()
+        {
+            var someu = User.Claims.Where(c => c.Type == "sub").FirstOrDefault().Value;
+            _user = _context.Users.First<ApplicationUser>(u => u.Id == someu);
         }
 
         [HttpGet("seed/{quantity}")]
 
         public ActionResult Seed(int quantity)
         {
-            var someu = User.Claims.Where(c => c.Type == "sub").FirstOrDefault().Value;
-
-            var user = _accessor.HttpContext.User.Identity.Name;
-            var appUser = _context.Users.First<ApplicationUser>(u => u.Id == someu);
-            var result = BoardsDbInitializer.Seed(_context, quantity, appUser);
+            initUser();
+            var result = BoardsDbInitializer.Seed(_context, quantity, _user);
             return Ok(result);
         }
+
+
         [HttpGet("nuke")]
         public ActionResult DeleteAllBoardsByUser()
         {
-            var user = User.Claims.Where(c => c.Type == "sub").FirstOrDefault().Value;
-            var allBoardsByUser = _context.Boards.Where(b => b.user.Id == user);
+            initUser();
+            var allBoardsByUser = _context.Boards.Where(b => b.user.Id == _user.Id);
             _context.Boards.RemoveRange(allBoardsByUser);
             var result = _context.SaveChanges();
             return Ok(result);
@@ -58,6 +77,7 @@ namespace ProjectPhoenix.Controllers
             var result = _context.SaveChanges();
             return Ok(result);
         }
+
         // GET: api/<BoardsController>
         [HttpGet]   
         public IEnumerable<BoardViewModel> Get()
@@ -70,44 +90,44 @@ namespace ProjectPhoenix.Controllers
             {
                 result.Add(new BoardViewModel(board));
             }
-            // List<String> boardNames = boards.Select<String>(b => b.name);
+
             return result;
         }
 
-        public class BoardViewModel : BaseModel, IBoard
-        {
-            public BoardViewModel(Board board)
-            {
-                this.name = board.name;
-                this.username = board.user.UserName;
-                this.id = board.id;
-                this.updateDate = board.updateDate;
-                this.createDate = board.createDate;
-                this.modifyDate = board.modifyDate;
-            }
-            public String name { get; set; }
-            public string username { get; set; }
-        }
+       
 
         // GET api/<BoardsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public BoardViewModel Get(Guid id)
         {
-            return "value";
+            Board result = (Board)_context.Boards
+                            .Include(board => board.user)
+                            .Where(board => board.id == id)
+                            .FirstOrDefault();
+
+            return new BoardViewModel(result);
         }
 
         // POST api/<BoardsController>
         [HttpPost]
         public void Post([FromBody] string value)
         {
+            initUser();
+            var added = new Board { createDate = DateTime.Now, modifyDate = DateTime.Now, id = Guid.NewGuid(), name = value, user = _user };
             _context.Add(value);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         // PUT api/<BoardsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(Guid id, [FromBody] string value)
         {
+            initUser();
+            var result = _context.Boards
+                            .First(board => board.id == id && board.user.Id == _user.Id);
+            result.name = value;
+            result.modifyDate = DateTime.Now;
+            _context.SaveChanges();
         }
 
         // DELETE api/<BoardsController>/5

@@ -12,6 +12,6 @@ namespace ProjectPhoenix
 
         public string Summary { get; set; }
 
-        public string? UserID { get; set; }
+        public string UserID { get; set; }
     }
 }
