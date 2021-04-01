@@ -5,7 +5,10 @@
       "connectionId": "DefaultConnection"
     },
     "secrets1": {
-      "type": "secrets.user"
+      "resourceId": null,
+      "type": "secrets.user",
+      "connectionId": null,
+      "secretStore": null
     },
     "appInsights1": {
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/microsoft.insights/components/appInsights-test",

@@ -17,5 +17,7 @@ namespace ProjectPhoenix.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
+        public DbSet<Board> Boards { get; set; }
+        public DbSet<ApplicationUser> AppUsers {get; set;}
     }
 }

@@ -33,6 +33,23 @@
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20210331153458_board-v4.cs" />
+    <Compile Remove="Data\Migrations\20210331153458_board-v4.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210401152851_Board-userId.cs" />
+    <Compile Remove="Data\Migrations\20210401152851_Board-userId.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210401155113_Board-User.cs" />
+    <Compile Remove="Data\Migrations\20210401155113_Board-User.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210401155253_Board-User.cs" />
+    <Compile Remove="Data\Migrations\20210401155253_Board-User.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210401155336_Board-User.cs" />
+    <Compile Remove="Data\Migrations\20210401155336_Board-User.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210401155514_Board-User.cs" />
+    <Compile Remove="Data\Migrations\20210401155514_Board-User.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210401155954_Board-Userv4.cs" />
+    <Compile Remove="Data\Migrations\20210401155954_Board-Userv4.Designer.cs" />
+  </ItemGroup>
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">

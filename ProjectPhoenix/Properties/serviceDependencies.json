@@ -5,7 +5,8 @@
       "connectionId": "DefaultConnection"
     },
     "secrets1": {
-      "type": "secrets"
+      "type": "secrets",
+      "connectionId": null
     },
     "appInsights1": {
       "type": "appInsights",
