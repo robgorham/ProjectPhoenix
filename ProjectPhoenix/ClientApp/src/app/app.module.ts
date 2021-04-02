@@ -14,6 +14,8 @@ import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
 import { BoardModule } from './board/board.module';
 import { BoardComponent } from './board/board/board.component';
+import { BoardManagerComponent } from './board/board-manager/board-manager.component';
+
 
 @NgModule({
   declarations: [
@@ -33,7 +35,7 @@ import { BoardComponent } from './board/board/board.component';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
-      { path: 'boards', component: BoardComponent, canActivate: [AuthorizeGuard] }
+      { path: 'boards', component: BoardManagerComponent, canActivate: [AuthorizeGuard] }
     ])
   ],
   providers: [
