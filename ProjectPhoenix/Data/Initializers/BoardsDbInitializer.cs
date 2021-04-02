@@ -23,7 +23,7 @@ namespace ProjectPhoenix.Data.Initializers
             var now = DateTime.Now;
             for(int x = 0; x < quantity; x++)
             {
-                boards.Add(new Board { createDate = now, modifyDate = now, updateDate = now, name = "Rinzler", id = Guid.Empty, user = appUser });
+                boards.Add(new Board { createDate = now, modifyDate = now, name = "Rinzler", id = Guid.Empty, user = appUser });
 
             }
             context.Boards.AddRange(boards);
