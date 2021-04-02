@@ -3,14 +3,15 @@ import { CommonModule } from '@angular/common';
 
 import { BoardRoutingModule } from './board-routing.module';
 import { BoardComponent } from '../board/board/board.component';
+import { BoardManagerComponent } from '../board/board-manager/board-manager.component';
 
 
 @NgModule({
-  declarations: [BoardComponent],
+  declarations: [BoardComponent, BoardManagerComponent],
   imports: [
     CommonModule,
     BoardRoutingModule
   ],
-  exports: [BoardComponent]
+  exports: [BoardComponent, BoardManagerComponent]
 })
 export class BoardModule { }
