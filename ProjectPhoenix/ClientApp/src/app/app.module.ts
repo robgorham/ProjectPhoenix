@@ -13,6 +13,7 @@ import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
 import { BoardModule } from './board/board.module';
+import { BoardComponent } from './board/board/board.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,7 @@ import { BoardModule } from './board/board.module';
     NavMenuComponent,
     HomeComponent,
     CounterComponent,
-    FetchDataComponent
+    FetchDataComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -32,6 +33,7 @@ import { BoardModule } from './board/board.module';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
+      { path: 'boards', component: BoardComponent, canActivate: [AuthorizeGuard] }
     ])
   ],
   providers: [
