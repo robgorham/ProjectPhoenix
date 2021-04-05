@@ -3,7 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { LoginMenuComponent } from './login-menu.component';
 
-fdescribe('LoginMenuComponent', () => {
+describe('LoginMenuComponent', () => {
   let component: LoginMenuComponent;
   let fixture: ComponentFixture<LoginMenuComponent>;
 
