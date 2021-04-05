@@ -4,7 +4,7 @@ import { AuthorizeService } from './authorize.service';
 
 
 
-fdescribe('AuthorizeService', () => {
+describe('AuthorizeService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [AuthorizeService]
