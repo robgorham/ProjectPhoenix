@@ -5,7 +5,7 @@
       {{ board.name }}
     </div>
     <div class="card-buttons">
-      <button mat-icon-button aria-hidden="false" color="primary" aria-label="Edit"><mat-icon>edit</mat-icon></button>
+      <button mat-icon-button aria-hidden="false" color="primary" aria-label="Edit" (click)="openEditDialog(board.name, board.id)"><mat-icon>edit</mat-icon></button>
       <button mat-icon-button aria-hidden="false" color="warn" aria-label="Delete"><mat-icon>delete</mat-icon></button>
     </div>
   </mat-card>

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/internal/operators/tap';
+import { IBoard } from './board-models';
 
 
 @Injectable({
@@ -16,5 +17,9 @@ export class BoardApiService {
     return this.http.get<IBoard[]>(this.baseUrl + 'api/boards').pipe(
       tap(console.log)
     );
+  }
+
+  updateBoardById(id: string, name: string) {
+    throw new Error('Function not Implemented');
   }
 }
