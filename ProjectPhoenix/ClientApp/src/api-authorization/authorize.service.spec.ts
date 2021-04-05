@@ -2,7 +2,9 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { AuthorizeService } from './authorize.service';
 
-describe('AuthorizeService', () => {
+
+
+fdescribe('AuthorizeService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [AuthorizeService]

@@ -21,9 +21,9 @@ namespace ProjectPhoenix.Controllers
 
     public class BoardsController : ControllerBase
     {
-        public class BoardViewModel : BaseModel, IBoard
+        public class BoardDTO : BaseModel, IBoard
         {
-            public BoardViewModel(Board board)
+            public BoardDTO(Board board)
             {
                 this.name = board.name;
                 this.username = board.user.UserName;
@@ -80,15 +80,17 @@ namespace ProjectPhoenix.Controllers
 
         // GET: api/<BoardsController>
         [HttpGet]   
-        public IEnumerable<BoardViewModel> Get()
+        public IEnumerable<BoardDTO> Get()
         {
+            initUser();
             List<Board> boards = _context.Boards
                                     .Include(board => board.user)
+                                    .Where(board => board.user.Id == _user.Id)
                                     .ToList<Board>();
-            List<BoardViewModel> result = new List<BoardViewModel>();
+            List<BoardDTO> result = new List<BoardDTO>();
             foreach(Board board in boards)
             {
-                result.Add(new BoardViewModel(board));
+                result.Add(new BoardDTO(board));
             }
 
             return result;
@@ -98,14 +100,14 @@ namespace ProjectPhoenix.Controllers
 
         // GET api/<BoardsController>/5
         [HttpGet("{id}")]
-        public BoardViewModel Get(Guid id)
+        public BoardDTO Get(Guid id)
         {
             Board result = (Board)_context.Boards
                             .Include(board => board.user)
                             .Where(board => board.id == id)
                             .FirstOrDefault();
 
-            return new BoardViewModel(result);
+            return new BoardDTO(result);
         }
 
         // POST api/<BoardsController>
