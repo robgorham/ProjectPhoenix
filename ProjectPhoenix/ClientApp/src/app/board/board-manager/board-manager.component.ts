@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { BoardApiService } from '../board-api.service';
 
 @Component({
   selector: 'app-board-manager',
@@ -7,9 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BoardManagerComponent implements OnInit {
 
-  constructor() { }
+  boards$: Observable<IBoard[]>;
+  constructor(private boardapi: BoardApiService) { }
 
   ngOnInit() {
+    this.boards$ = this.boardapi.getBoards();
   }
 
 }

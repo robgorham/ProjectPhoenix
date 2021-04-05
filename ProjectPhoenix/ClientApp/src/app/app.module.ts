@@ -13,9 +13,8 @@ import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
 import { BoardModule } from './board/board.module';
-import { BoardComponent } from './board/board/board.component';
 import { BoardManagerComponent } from './board/board-manager/board-manager.component';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -26,11 +25,12 @@ import { BoardManagerComponent } from './board/board-manager/board-manager.compo
     FetchDataComponent,
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
-    HttpClientModule,
-    FormsModule,
     ApiAuthorizationModule,
     BoardModule,
+    BrowserAnimationsModule,
+    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    FormsModule,
+    HttpClientModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },

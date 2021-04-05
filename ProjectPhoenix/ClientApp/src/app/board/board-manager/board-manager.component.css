@@ -1,0 +1,23 @@
+.board-container{
+    display: flex;
+    flex-flow: row wrap;
+    padding-top: 1em;
+}
+
+.board-list-item {
+  display: flex;
+  margin-bottom: 1em;
+  margin-left: 1em;
+  justify-content: space-between;
+  flex-direction: row;
+  min-height: 300px;
+  min-width: 300px;
+}
+
+.board-title {
+  max-width:200px;
+}
+
+.card-buttons {
+  justify-content: flex-end;
+}
