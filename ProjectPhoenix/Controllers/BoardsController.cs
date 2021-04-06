@@ -120,22 +120,46 @@ namespace ProjectPhoenix.Controllers
             _context.SaveChanges();
         }
 
+        public class PutModel {
+            public PutModel() { }
+            public string name { get; set; }
+        }
         // PUT api/<BoardsController>/5
         [HttpPut("{id}")]
-        public void Put(Guid id, [FromBody] string value)
+        public ActionResult Put(Guid id, [FromBody] PutModel data)
         {
+            if (!ModelState.IsValid)
+                return BadRequest("Not a valid model");
             initUser();
             var result = _context.Boards
-                            .First(board => board.id == id && board.user.Id == _user.Id);
-            result.name = value;
-            result.modifyDate = DateTime.Now;
-            _context.SaveChanges();
+                            .FirstOrDefault<Board>(board => board.id == id && board.user.Id == _user.Id);
+            
+            if(result != null)
+            {
+                result.name = data.name;
+                result.modifyDate = DateTime.Now;
+                var success = _context.SaveChanges();
+                return Ok(success);
+
+            }
+            return NotFound();
         }
 
         // DELETE api/<BoardsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(Guid id)
         {
+            initUser();
+            var result = _context.Boards
+                            .FirstOrDefault<Board>(board => board.id == id && board.user.Id == _user.Id);
+            if (result != null)
+            {
+                _context.Entry(result).State = EntityState.Deleted;
+                var success = _context.SaveChanges();
+                return Ok(success);
+
+            }
+            return NotFound();
         }
     }
 }

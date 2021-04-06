@@ -7,6 +7,8 @@ import { BoardRoutingModule } from './board-routing.module';
 import { MatRippleModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 import { BoardComponent } from '../board/board/board.component';
@@ -26,7 +28,9 @@ import { FormsModule } from '@angular/forms';
     MatIconModule,
     MatRippleModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   exports: [BoardComponent, BoardManagerComponent]
 })

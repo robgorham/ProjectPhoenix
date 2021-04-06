@@ -20,6 +20,14 @@ export class BoardApiService {
   }
 
   updateBoardById(id: string, name: string) {
-    throw new Error('Function not Implemented');
+    return this.http.put<number>(this.baseUrl + 'api/boards/' + id, { name }).pipe(
+      tap(console.log)
+    );
+  }
+
+  deleteBoardById(id: string) {
+    return this.http.delete<number>(this.baseUrl + 'api/boards/' + id).pipe(
+      tap(console.log)
+    );
   }
 }

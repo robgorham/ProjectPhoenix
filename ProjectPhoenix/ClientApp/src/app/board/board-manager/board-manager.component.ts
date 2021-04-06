@@ -32,14 +32,21 @@ export class BoardManagerComponent implements OnInit {
     const dialogRef = this.dialog.open(BoardEditComponent,
       {
         width: '250px',
-        data: {name, id}
+        data: { name, id },
+        disableClose: true
       })
 
     dialogRef.afterClosed().pipe(
       filter(result => result.success),
       tap(console.log),
-      switchMap(result => this.boardapi.updateBoardById(id, result.name))
+      switchMap(result => this.boardapi.updateBoardById(id, result.name)),
+      tap(() => this.boards$ = this.boardapi.getBoards())
     ).subscribe();
   }
 
+  deleteBoard(id: string) {
+    this.boardapi.deleteBoardById(id).pipe(
+      switchMap(() => this.boards$ = this.boardapi.getBoards())
+    ).subscribe();
+  }
 }
