@@ -1,8 +1,9 @@
-<h1 mat-dialog-title>Edit {{data.name}}</h1>
+<h1 mat-dialog-title>Edit Board</h1>
 <div mat-dialog-content>
-  <p>Rename Board</p>
-  <label for="board-name">Board Name:</label>
-  <input matInput type="text" id="board-name" name="board-name" [(ngModel)]="data.name" value="data.name" >
+  <mat-form-field>
+    <mat-label>Board Name:</mat-label>
+    <input matInput id="board-name" name="board-name" [(ngModel)]="data.name" value="data.name">
+  </mat-form-field>
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button aria-hidden="false" [mat-dialog-close]="{success: false}">Cancel</button>
