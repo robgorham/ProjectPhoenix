@@ -43,7 +43,18 @@ export class BoardManagerComponent implements OnInit {
       tap(() => this.boards$ = this.boardapi.getBoards())
     ).subscribe();
   }
-
+  openCreateModal(template ) {
+    const dialogRef = this.dialog.open(template, {
+      width: '300px',
+      disableClose: true
+    })
+    dialogRef.afterClosed().pipe(
+      filter(result => result.success),
+      tap(console.log),
+      switchMap(result => this.boardapi.createBoard(result.name)),
+      switchMap(() => this.boards$ = this.boardapi.getBoards())
+    ).subscribe();
+  }
   deleteBoard(id: string) {
     this.boardapi.deleteBoardById(id).pipe(
       switchMap(() => this.boards$ = this.boardapi.getBoards())

@@ -30,4 +30,10 @@ export class BoardApiService {
       tap(console.log)
     );
   }
+
+  createBoard(name: string) {
+    return this.http.post(this.baseUrl + 'api/boards', { name }).pipe(
+      tap(console.log)
+    );
+  }
 }

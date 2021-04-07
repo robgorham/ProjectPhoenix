@@ -71,9 +71,9 @@ namespace ProjectPhoenix.Controllers
         [HttpGet("nukenull")]
         public ActionResult DeleteAllBoardsByNull()
         {
-            var allBoardsByUser = _context.Boards
+            var allBoardsByNull = _context.Boards
                                     .Where(b => b.user.Id == null);
-            _context.Boards.RemoveRange(allBoardsByUser);
+            _context.Boards.RemoveRange(allBoardsByNull);
             var result = _context.SaveChanges();
             return Ok(result);
         }
@@ -102,9 +102,10 @@ namespace ProjectPhoenix.Controllers
         [HttpGet("{id}")]
         public BoardDTO Get(Guid id)
         {
+            initUser();
             Board result = (Board)_context.Boards
                             .Include(board => board.user)
-                            .Where(board => board.id == id)
+                            .Where(board => board.id == id && board.user.Id == _user.Id)
                             .FirstOrDefault();
 
             return new BoardDTO(result);
@@ -112,11 +113,12 @@ namespace ProjectPhoenix.Controllers
 
         // POST api/<BoardsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] PutModel data)
         {
+            var value = data.name;
             initUser();
             var added = new Board { createDate = DateTime.Now, modifyDate = DateTime.Now, id = Guid.NewGuid(), name = value, user = _user };
-            _context.Add(value);
+            _context.Add(added);
             _context.SaveChanges();
         }
 
