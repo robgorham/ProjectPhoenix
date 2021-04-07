@@ -50,6 +50,10 @@
     <Compile Remove="Data\Migrations\20210401155954_Board-Userv4.Designer.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ClientApp\src\app\shared\" />
+  </ItemGroup>
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">

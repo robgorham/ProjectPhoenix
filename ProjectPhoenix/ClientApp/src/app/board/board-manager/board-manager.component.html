@@ -1,16 +1,32 @@
 <h2>Board Management</h2>
+<button mat-raised-button color="primary" (click)="openCreateModal(createBoard)">Create</button>
+<!--#region Board Container-->
 <div class="board-container">
-  <div>
-
-  </div>
-  <mat-card *ngFor="let board of (boards$ | async)" class="board-list-item mat-elevation-z4">
+  <mat-card *ngFor="let board of (boards$ | async)" class="board-list-item mat-elevation-z4" matRipple>
     <div class="board-title">
       {{ board.name }}
     </div>
     <div class="card-buttons">
+      <button mat-icon-button aria-hidden="false" color="primary" aria-label="Open"><mat-icon>dashboard</mat-icon></button>
       <button mat-icon-button aria-hidden="false" color="primary" aria-label="Edit" (click)="openEditDialog(board.name, board.id)"><mat-icon>edit</mat-icon></button>
-      <button mat-icon-button aria-hidden="false" color="warn" (click)="deleteBoard(board.id)"aria-label="Delete"><mat-icon>delete</mat-icon></button>
+      <button mat-icon-button aria-hidden="false" color="warn" (click)="deleteBoard(board.id)" aria-label="Delete"><mat-icon>delete</mat-icon></button>
     </div>
   </mat-card>
-
 </div>
+<!-- #endregion -->
+<!-- #region Create Modal-->
+<ng-template #createBoard>
+  <h1 mat-dialog-title>Create Board</h1>
+  <div mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Board Name:</mat-label>
+      <input matInput id="board-name" name="board-name" placeholder="Board Name" #boardName>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button aria-hidden="false" [mat-dialog-close]="{success: false}">Cancel</button>
+    <button mat-raised-button aria-hidden="false" [mat-dialog-close]="{success: true, name: boardName.value}">Save</button>
+
+  </div>
+</ng-template>
+<!-- #endregion -->
