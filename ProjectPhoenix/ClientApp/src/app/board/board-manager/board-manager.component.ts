@@ -29,7 +29,7 @@ export class BoardManagerComponent implements OnInit {
     this.boards$ = this.boardapi.getBoards();
   }
 
-  openEditDialog(name: string, id: string) {
+  openEditDialog(name: string, id: string): void {
     const dialogRef = this.dialog.open(BoardEditComponent,
       {
         data: { name, id },
@@ -43,7 +43,7 @@ export class BoardManagerComponent implements OnInit {
       tap(() => this.boards$ = this.boardapi.getBoards())
     ).subscribe();
   }
-  openCreateModal(template ) {
+  openCreateModal(template): void {
     const dialogRef = this.dialog.open(template, {
       disableClose: true
     })
@@ -55,7 +55,7 @@ export class BoardManagerComponent implements OnInit {
     ).subscribe();
   }
 
-  deleteBoard( id: string) {
+  deleteBoard( id: string): void {
     const dialogRef = this.dialog.open(ConfirmModalComponent, {
       disableClose: true
     })

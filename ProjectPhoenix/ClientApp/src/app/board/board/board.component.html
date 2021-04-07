@@ -1,1 +1,17 @@
-<p>board works!</p>
+<ng-container *ngIf="(board$ | async) as board else noBoard">{{board.name}}</ng-container>
+<ng-template #noBoard>
+  <mat-card>
+    <mat-card-title>
+      Sorry
+    </mat-card-title>
+    <mat-card-content>
+      I cannot find a board with this id
+    </mat-card-content>
+  </mat-card>
+</ng-template>
+<div style="background-color:aqua;width:100%;min-height:800px">
+  <code>
+    #Todo: Add Columns on back end and Repository pattern also
+  </code>
+
+</div>

@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { BoardComponent } from '../board/board/board.component';
 import { BoardManagerComponent } from '../board/board-manager/board-manager.component';
@@ -21,7 +21,6 @@ import { FormsModule } from '@angular/forms';
   declarations: [BoardComponent, BoardManagerComponent, BoardEditComponent],
   imports: [
     CommonModule,
-    BoardRoutingModule,
     MatSliderModule,
     FormsModule,
     MatCardModule,
@@ -30,7 +29,9 @@ import { FormsModule } from '@angular/forms';
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatTooltipModule,
+    BoardRoutingModule
   ],
   exports: [BoardComponent, BoardManagerComponent]
 })
