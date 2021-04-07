@@ -16,8 +16,4 @@ export class BoardEditComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onCancelClick() {
-    this.dialogRef.close({success: false});
-  }
-
 }

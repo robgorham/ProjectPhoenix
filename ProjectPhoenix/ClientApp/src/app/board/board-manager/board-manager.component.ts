@@ -1,7 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, TemplateRef } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
+import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 import { BoardApiService } from '../board-api.service';
 import { BoardEditComponent } from '../board-edit/board-edit.component';
 import { IBoard } from '../board-models';
@@ -31,7 +32,6 @@ export class BoardManagerComponent implements OnInit {
   openEditDialog(name: string, id: string) {
     const dialogRef = this.dialog.open(BoardEditComponent,
       {
-        width: '250px',
         data: { name, id },
         disableClose: true
       })
@@ -45,7 +45,6 @@ export class BoardManagerComponent implements OnInit {
   }
   openCreateModal(template ) {
     const dialogRef = this.dialog.open(template, {
-      width: '300px',
       disableClose: true
     })
     dialogRef.afterClosed().pipe(
@@ -55,9 +54,17 @@ export class BoardManagerComponent implements OnInit {
       switchMap(() => this.boards$ = this.boardapi.getBoards())
     ).subscribe();
   }
-  deleteBoard(id: string) {
-    this.boardapi.deleteBoardById(id).pipe(
+
+  deleteBoard( id: string) {
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      disableClose: true
+    })
+
+    dialogRef.afterClosed().pipe(
+      filter(result => result.success),
+      switchMap(() => this.boardapi.deleteBoardById(id)),
       switchMap(() => this.boards$ = this.boardapi.getBoards())
     ).subscribe();
   }
+
 }
