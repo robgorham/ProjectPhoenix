@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace ProjectPhoenix.Models
 {
-    interface IBoard : IBaseModel
+    interface IColumn : IBaseModel
     {
         string name { get; set; }
-        Column[] Columns { get; set; }
+        int order { get; set; }
+        Board board { get; set; }
     }
-    
 }

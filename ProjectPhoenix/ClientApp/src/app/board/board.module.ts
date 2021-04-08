@@ -10,17 +10,19 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BoardComponent } from '../board/board/board.component';
 import { BoardManagerComponent } from '../board/board-manager/board-manager.component';
 import { BoardEditComponent } from './board-edit/board-edit.component';
 import { FormsModule } from '@angular/forms';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 
 @NgModule({
   declarations: [BoardComponent, BoardManagerComponent, BoardEditComponent],
   imports: [
     CommonModule,
+    DragDropModule,
     MatSliderModule,
     FormsModule,
     MatCardModule,
@@ -31,6 +33,7 @@ import { FormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     MatTooltipModule,
+    ScrollingModule,
     BoardRoutingModule
   ],
   exports: [BoardComponent, BoardManagerComponent]

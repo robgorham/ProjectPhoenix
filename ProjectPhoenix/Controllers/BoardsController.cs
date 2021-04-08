@@ -30,9 +30,11 @@ namespace ProjectPhoenix.Controllers
                 this.id = board.id;
                 this.createDate = board.createDate;
                 this.modifyDate = board.modifyDate;
+                this.Columns = board?.Columns;
             }
             public string name { get; set; }
             public string username { get; set; }
+            public Column[] Columns { get; set; }
         }
 
         private ApplicationDbContext _context;

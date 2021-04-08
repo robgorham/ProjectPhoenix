@@ -48,6 +48,8 @@
     <Compile Remove="Data\Migrations\20210401155514_Board-User.Designer.cs" />
     <Compile Remove="Data\Migrations\20210401155954_Board-Userv4.cs" />
     <Compile Remove="Data\Migrations\20210401155954_Board-Userv4.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210408182910_Column-v1.cs" />
+    <Compile Remove="Data\Migrations\20210408182910_Column-v1.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

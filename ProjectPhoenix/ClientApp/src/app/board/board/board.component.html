@@ -1,5 +1,29 @@
-<ng-container *ngIf="(board$ | async) as board else noBoard">{{board.name}}</ng-container>
+<ng-container *ngIf="(board$ | async ) as board else noBoard">
+  <h2 cdkDragHandle>{{board.name}}</h2>
+  <div cdkDropListGroup class="list-group">
+    <cdk-virtual-scroll-viewport  orientation="horizontal" itemSize="20" class="column-list-viewport">
+      <!-- #TODO Create a column component -->
+      <div cdkDropList [cdkDropListData]="board.columns" cdkDropListOrientation="horizontal" (cdkDropListDropped)="onColumnMove($event, board)" class="column-list">
+        <mat-card *cdkVirtualFor="let column of board.columns" class="board-column mat-elevation-z3" cdkDrag>
+          <mat-card-title class="column-header">
+            <div class="column-name">
+              {{column.name}}
+            </div>
+            <div class="column-buttons">
+              <button mat-icon-button color="primary"><mat-icon>edit</mat-icon></button>
+              <button mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>
+            </div>
+          </mat-card-title>
+        </mat-card>
+      </div>
+    </cdk-virtual-scroll-viewport>
+
+
+  </div>
+</ng-container>
 <ng-template #noBoard>
+  oB
+  at
   <mat-card>
     <mat-card-title>
       Sorry
@@ -9,9 +33,3 @@
     </mat-card-content>
   </mat-card>
 </ng-template>
-<div style="background-color:aqua;width:100%;min-height:800px">
-  <code>
-    #Todo: Add Columns on back end and Repository pattern also
-  </code>
-
-</div>

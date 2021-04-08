@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace ProjectPhoenix.Models
 {
-    public class Board : BaseModel, IBoard
+    public class Column : BaseModel, IColumn
     {
-        public Board() { }
-        public virtual string name { get; set; }
-        public virtual Column[] Columns { get; set; }
+        public string name { get; set; }
+        public int order { get; set; }
+        public virtual Board board {get; set;}
         public ApplicationUser user { get; set; }
     }
 }
