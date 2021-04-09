@@ -175,26 +175,33 @@ namespace ProjectPhoenix.Controllers
             var value = data.name;
             initUser();
             Board result = (Board)_context.Boards
-                           .Include(board => board.Columns)
+                           //.Include(board => board.Columns)
                            .Where(board => board.id == id && board.user.Id == _user.Id)
                            .FirstOrDefault();
             if (result is not null)
             {
+                if(result.Columns is null)
+                {
+                    result.Columns = new Column[0];
+                }
+                var added = new Column { board = result, order = result.Columns.Length + 1, createDate = DateTime.Now, modifyDate = DateTime.Now, id = Guid.NewGuid(), name = value, user = _user };
+                Console.WriteLine(added);
+                result.Columns[result.Columns.Length] = added;
+                Console.WriteLine(added);
+                _context.Columns.Add(added);
+                _context.Entry<Board>(result).State = EntityState.Modified;
+                try
+                {
+                    var success = _context.SaveChanges();
+                    return Ok(success);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
 
             }
-            var added = new Column { board= result, order=result.Columns.Length + 1, createDate = DateTime.Now, modifyDate = DateTime.Now, id = Guid.NewGuid(), name = value, user = _user };
-            result.Columns[result.Columns.Length] = added;
-            _context.Columns.Add(added);
-            _context.Entry<Board>(result).State = EntityState.Modified;
-            try
-            {
-                var success = _context.SaveChanges();
-                return Ok(success);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            return NotFound();
         }
         
     

@@ -1,7 +1,7 @@
 <ng-container *ngIf="(board$ | async ) as board else noBoard">
   <div id="board-header">
     <h2 cdkDragHandle>{{board.name}}</h2>
-    <button mat-icon-button aria-hidden="false" color="primary" (click)="onAddColumnClick()" ><mat-icon>add</mat-icon></button>
+    <button mat-icon-button aria-hidden="false" color="primary" (click)="onAddColumnClick(board)" ><mat-icon>add</mat-icon></button>
   </div>
 
   <div cdkDropListGroup class="list-group">

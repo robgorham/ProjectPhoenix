@@ -49,7 +49,8 @@ export class BoardComponent implements OnInit {
     this.board = { ...board, columns: [...cols] };
   }
   onAddColumnClick(board: IBoard) {
-    this.boardapi.addColumn(board, 'Blank');
+    this.boardapi.addColumn(board, 'Blank').subscribe();
+
   }
 
 }
