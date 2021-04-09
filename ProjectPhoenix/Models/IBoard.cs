@@ -8,7 +8,7 @@ namespace ProjectPhoenix.Models
     interface IBoard : IBaseModel
     {
         string name { get; set; }
-        Column[] Columns { get; set; }
+        IList<Column> Columns { get; set; }
     }
     
 }
