@@ -2,14 +2,16 @@
 <button mat-raised-button color="primary" (click)="openCreateModal(createBoard)">Create</button>
 <!--#region Board Container-->
 <div class="board-container">
-  <mat-card *ngFor="let board of (boards$ | async)" class="board-list-item mat-elevation-z4" matRipple>
-    <div class="board-title">
-      {{ board.name }}
+  <mat-card *ngFor="let board of (boards$ | async)" class="board-list-item mat-elevation-z3">
+    <div class="board-title"matRipple>
+      <a [routerLink]="['/boards/', board.id]" >{{board.name}}</a>
     </div>
-    <div class="card-buttons">
-      <button mat-icon-button aria-hidden="false" color="primary" aria-label="Open"><mat-icon>dashboard</mat-icon></button>
-      <button mat-icon-button aria-hidden="false" color="primary" aria-label="Edit" (click)="openEditDialog(board.name, board.id)"><mat-icon>edit</mat-icon></button>
-      <button mat-icon-button aria-hidden="false" color="warn" (click)="deleteBoard(board.id)" aria-label="Delete"><mat-icon>delete</mat-icon></button>
+    <div class="card-buttons" >
+      <a [routerLink]="['/boards/', board.id]" matToolTip="Open Board">
+        <button mat-icon-button class="mat-elevation-z3" aria-hidden="false" color="primary" aria-label="Open" matRipple><mat-icon>dashboard</mat-icon></button>
+      </a>
+      <button mat-icon-button class="mat-elevation-z3" style="margin-left:.25em;" aria-hidden="false" color="primary" aria-label="Edit" (click)="openEditDialog(board.name, board.id)" matRipple><mat-icon>edit</mat-icon></button>
+      <button mat-icon-button class="mat-elevation-z3" style="margin-left:.25em;"aria-hidden="false" color="warn" (click)="deleteBoard(board.id)" aria-label="Delete" matRipple ><mat-icon>delete</mat-icon></button>
     </div>
   </mat-card>
 </div>
