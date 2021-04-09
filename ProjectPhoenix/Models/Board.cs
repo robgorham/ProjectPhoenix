@@ -9,7 +9,7 @@ namespace ProjectPhoenix.Models
     {
         public Board() { }
         public virtual string name { get; set; }
-        public virtual Column[] Columns { get; set; }
+        public virtual IList<Column> Columns { get; set; }
         public ApplicationUser user { get; set; }
     }
 }

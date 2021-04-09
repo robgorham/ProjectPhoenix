@@ -28,7 +28,6 @@ export class BoardApiService {
 
   getBoardById(id: string): Observable<IBoard> {
     return this.http.get<IBoard>(this.baseUrl + 'api/boards/' + id).pipe(
-      tap(console.log)
     )
   }
 

@@ -34,7 +34,7 @@ namespace ProjectPhoenix.Controllers
             }
             public string name { get; set; }
             public string username { get; set; }
-            public Column[] Columns { get; set; }
+            public IList <Column> Columns { get; set; }
         }
         
 
@@ -91,7 +91,7 @@ namespace ProjectPhoenix.Controllers
             List<Board> boards = _context.Boards
                                     .Include(board => board.user)
                                     .Where(board => board.user.Id == _user.Id)
-                                    .ToList<Board>();
+                                    .ToList();
             List<BoardDTO> result = new List<BoardDTO>();
             foreach(Board board in boards)
             {
