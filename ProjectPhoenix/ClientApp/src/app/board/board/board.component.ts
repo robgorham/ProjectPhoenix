@@ -48,5 +48,8 @@ export class BoardComponent implements OnInit {
     console.log('column maybe moved', JSON.stringify(board.columns.map(x => ({ id: x.id, name: x.name }))));
     this.board = { ...board, columns: [...cols] };
   }
+  onAddColumnClick(board: IBoard) {
+    this.boardapi.addColumn(board, 'Blank');
+  }
 
 }

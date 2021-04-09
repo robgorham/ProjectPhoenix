@@ -9,8 +9,15 @@ import { IBoard } from './board-models';
   providedIn: 'root'
 })
 export class BoardApiService {
+
   constructor(private http: HttpClient,  @Inject('BASE_URL') private baseUrl: string) {
 
+  }
+
+  addColumn(board: IBoard, name: string) {
+    return this.http.post(this.baseUrl + 'api/boards/' + board.id + '/columns', { name }).pipe(
+      tap(res => console.log(JSON.stringify(res)))
+    );
   }
 
   getBoards(): Observable<IBoard[]>{

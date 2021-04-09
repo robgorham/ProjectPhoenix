@@ -36,6 +36,7 @@ namespace ProjectPhoenix.Controllers
             public string username { get; set; }
             public Column[] Columns { get; set; }
         }
+        
 
         private ApplicationDbContext _context;
         private ApplicationUser _user;
@@ -44,6 +45,7 @@ namespace ProjectPhoenix.Controllers
             _context = context;
             
         }
+        
 
         private void initUser()
         {
@@ -51,6 +53,7 @@ namespace ProjectPhoenix.Controllers
             _user = _context.Users.First<ApplicationUser>(u => u.Id == someu);
         }
 
+        
         [HttpGet("seed/{quantity}")]
 
         public ActionResult Seed(int quantity)
@@ -165,5 +168,35 @@ namespace ProjectPhoenix.Controllers
             }
             return NotFound();
         }
+
+        [HttpPost("{id}/columns")]
+        public ActionResult AddColumn(Guid id, [FromBody] PutModel data)
+        {
+            var value = data.name;
+            initUser();
+            Board result = (Board)_context.Boards
+                           .Include(board => board.Columns)
+                           .Where(board => board.id == id && board.user.Id == _user.Id)
+                           .FirstOrDefault();
+            if (result is not null)
+            {
+
+            }
+            var added = new Column { board= result, order=result.Columns.Length + 1, createDate = DateTime.Now, modifyDate = DateTime.Now, id = Guid.NewGuid(), name = value, user = _user };
+            result.Columns[result.Columns.Length] = added;
+            _context.Columns.Add(added);
+            _context.Entry<Board>(result).State = EntityState.Modified;
+            try
+            {
+                var success = _context.SaveChanges();
+                return Ok(success);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        
+    
     }
 }
