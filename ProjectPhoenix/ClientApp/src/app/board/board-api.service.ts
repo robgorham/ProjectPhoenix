@@ -14,7 +14,7 @@ export class BoardApiService {
 
   }
 
-  addColumn(board: IBoard, name: string) {
+  addColumn(board: IBoard, name: string) : Observable<any> {
     return this.http.post(this.baseUrl + 'api/boards/' + board.id + '/columns', { name }).pipe(
       tap(res => console.log(JSON.stringify(res)))
     );

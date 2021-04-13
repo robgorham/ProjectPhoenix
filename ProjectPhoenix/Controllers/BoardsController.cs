@@ -98,6 +98,10 @@ namespace ProjectPhoenix.Controllers
                 result.Add(new BoardDTO(board));
             }
 
+            if(result.Count() == 0)
+            {
+                return Array.Empty<BoardDTO>();
+            }
             return result;
         }
 
@@ -109,10 +113,9 @@ namespace ProjectPhoenix.Controllers
         {
             initUser();
             Board result = (Board)_context.Boards
-                            .Include(board => board.user)
+                            .Include(board => board.Columns.OrderBy(c => c.order))
                             .Where(board => board.id == id && board.user.Id == _user.Id)
                             .FirstOrDefault();
-
             return new BoardDTO(result);
         }
 
@@ -141,7 +144,7 @@ namespace ProjectPhoenix.Controllers
             var result = _context.Boards
                             .FirstOrDefault<Board>(board => board.id == id && board.user.Id == _user.Id);
             
-            if(result != null)
+            if(result is not null)
             {
                 result.name = data.name;
                 result.modifyDate = DateTime.Now;
@@ -149,7 +152,7 @@ namespace ProjectPhoenix.Controllers
                 return Ok(success);
 
             }
-            return NotFound();
+            return NotFound(id);
         }
 
         // DELETE api/<BoardsController>/5
@@ -166,30 +169,37 @@ namespace ProjectPhoenix.Controllers
                 return Ok(success);
 
             }
-            return NotFound();
+            return NotFound(id);
         }
 
         [HttpPost("{id}/columns")]
-        public ActionResult AddColumn(Guid id, [FromBody] PutModel data)
+        public ActionResult AddColumnToBoardById(Guid id, [FromBody] PutModel data)
         {
             var value = data.name;
             initUser();
-            Board result = (Board)_context.Boards
-                           //.Include(board => board.Columns)
+            Board candidateBoard = _context.Boards
+                           .Include(board => board.Columns)
                            .Where(board => board.id == id && board.user.Id == _user.Id)
                            .FirstOrDefault();
-            if (result is not null)
+            if (candidateBoard is not null)
             {
-                if(result.Columns is null)
+                if (candidateBoard.Columns is null)
                 {
-                    result.Columns = new Column[0];
+                    candidateBoard.Columns = new List<Column>();
                 }
-                var added = new Column { board = result, order = result.Columns.Length + 1, createDate = DateTime.Now, modifyDate = DateTime.Now, id = Guid.NewGuid(), name = value, user = _user };
-                Console.WriteLine(added);
-                result.Columns[result.Columns.Length] = added;
-                Console.WriteLine(added);
+                var added = new Column
+                {
+                    BoardId = candidateBoard.id,
+                    order = candidateBoard.Columns.Count() + 1,
+                    createDate = DateTime.Now,
+                    modifyDate = DateTime.Now,
+                    name = value,
+                    user = _user
+                };
+                candidateBoard.Columns.Add(added);
+                candidateBoard.modifyDate = DateTime.Now;
                 _context.Columns.Add(added);
-                _context.Entry<Board>(result).State = EntityState.Modified;
+                _context.Entry<Board>(candidateBoard).State = EntityState.Modified;
                 try
                 {
                     var success = _context.SaveChanges();
@@ -201,9 +211,9 @@ namespace ProjectPhoenix.Controllers
                 }
 
             }
-            return NotFound();
+            return NotFound(id);
         }
-        
-    
+
+
     }
 }

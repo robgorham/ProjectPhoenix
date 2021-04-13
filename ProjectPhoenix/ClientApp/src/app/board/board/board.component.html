@@ -1,6 +1,6 @@
 <ng-container *ngIf="(board$ | async ) as board else noBoard">
   <div id="board-header">
-    <h2 cdkDragHandle>{{board.name}}</h2>
+    <h4 cdkDragHandle>{{board.name}}: {{board.createDate}}</h4>
     <button mat-icon-button aria-hidden="false" color="primary" (click)="onAddColumnClick(board)" ><mat-icon>add</mat-icon></button>
   </div>
 
@@ -10,9 +10,9 @@
       <div cdkDropList [cdkDropListData]="board.columns" cdkDropListOrientation="horizontal" (cdkDropListDropped)="onColumnMove($event, board)" class="column-list">
         <mat-card *cdkVirtualFor="let column of board.columns" class="board-column mat-elevation-z3" cdkDrag>
           <mat-card-title class="column-header">
-            <div class="column-name">
+            <p class="column-name">
               {{column.name}}
-            </div>
+            </p>
             <div class="column-buttons">
               <button mat-icon-button color="primary"><mat-icon>edit</mat-icon></button>
               <button mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>

@@ -2,7 +2,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { switchMap, take, tap } from 'rxjs/operators';
+import { debounceTime, finalize, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { BoardApiService } from '../board-api.service';
 import { IBoard, IColumn, mockBoards } from '../board-models';
 
@@ -14,7 +14,9 @@ import { IBoard, IColumn, mockBoards } from '../board-models';
 })
 export class BoardComponent implements OnInit {
 
-  board$: Observable<IBoard>;
+  board$: BehaviorSubject<IBoard> = new BehaviorSubject(null);
+  //board$: Observable<IBoard>;
+
   board: IBoard;
   columns: IColumn[];
 
@@ -24,20 +26,16 @@ export class BoardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.board$ = this.route.paramMap.pipe(
-      take(1),
-      switchMap((params: ParamMap) => this.boardapi.getBoardById(params.get('id')).pipe(take(1), tap(console.log))
-      ));
+    this.route.paramMap.pipe(
+      switchMap(params => this.boardapi.getBoardById(params.get('id'))),
+      tap(board => this.board$.next(board))
+    ).subscribe();
 
 
-    //#region mock stuff
     let mb = { ...mockBoards[0] };
     const cols: IColumn[] = Array.from({ length: 8 }).map((_, i) => ({ ...mb.columns[0], id: i.toString(), name: `col ${i + 1}`, order:i }));
     mb.columns = [...cols];
     this.board = mb;
-    //#endregion
-
-    //this.columns = cols;
   }
 
   onColumnMove(event: CdkDragDrop<IColumn[]>, board: IBoard) {
@@ -45,11 +43,15 @@ export class BoardComponent implements OnInit {
     console.log('board.column before moved', JSON.stringify(board.columns.map(x => x.id)));
     //moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     moveItemInArray(board.columns, event.previousIndex, event.currentIndex);
-    console.log('column maybe moved', JSON.stringify(board.columns.map(x => ({ id: x.id, name: x.name }))));
+    console.log('column maybe moved', JSON.stringify(board.columns.map(x => ({ id: x.id, name: x.name, order: x.order }))));
     this.board = { ...board, columns: [...cols] };
   }
   onAddColumnClick(board: IBoard) {
-    this.boardapi.addColumn(board, 'Blank').subscribe();
+    this.boardapi.addColumn(board, 'Blank ').pipe(
+      debounceTime(500),
+      switchMap(_ => this.boardapi.getBoardById(board.id)),
+      tap(board => this.board$.next(board))
+    ).subscribe();
 
   }
 

@@ -9,6 +9,6 @@ namespace ProjectPhoenix.Models
     {
         string name { get; set; }
         int order { get; set; }
-        Board board { get; set; }
+        Guid BoardId { get; set; }
     }
 }
