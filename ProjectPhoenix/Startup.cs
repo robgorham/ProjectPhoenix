@@ -46,7 +46,7 @@ namespace ProjectPhoenix
             {
                 configuration.RootPath = "ClientApp/dist";
             });
-            services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
+            //services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,8 +92,8 @@ namespace ProjectPhoenix
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
-                    //spa.UseAngularCliServer(npmScript: "start");
+                    //spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                    spa.UseAngularCliServer(npmScript: "start");
                 }
             });
         }
