@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-column',
@@ -9,6 +9,7 @@ export class ColumnComponent implements OnInit {
 
   constructor() { }
 
+  @Input() column: any;
   ngOnInit(): void {
   }
 
