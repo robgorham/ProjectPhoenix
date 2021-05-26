@@ -1,9 +1,11 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { debounceTime, finalize, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { debounceTime, filter, finalize, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { BoardApiService } from '../board-api.service';
+import { BoardEditComponent } from '../board-edit/board-edit.component';
 import { IBoard, IColumn, mockBoards } from '../board-models';
 
 @Component({
@@ -20,7 +22,7 @@ export class BoardComponent implements OnInit {
   board: IBoard;
   columns: IColumn[];
 
-  constructor(private route: ActivatedRoute,
+  constructor(private route: ActivatedRoute,public dialog: MatDialog,
     private router: Router, private boardapi: BoardApiService) {
     
   }
@@ -36,6 +38,22 @@ export class BoardComponent implements OnInit {
     const cols: IColumn[] = Array.from({ length: 8 }).map((_, i) => ({ ...mb.columns[0], id: i.toString(), name: `col ${i + 1}`, order:i }));
     mb.columns = [...cols];
     this.board = mb;
+  }
+  oc(obj: any){
+    console.log(`obj: ${JSON.stringify(obj)}`);
+  }
+  openColumnEditDialog(name: string, id: string): void {
+    const dialogRef = this.dialog.open(BoardEditComponent,
+      {
+        data: { name, id },
+        disableClose: true
+      });
+      dialogRef.afterClosed().pipe(
+        filter(result => result.success),
+        tap(console.log),
+        switchMap(result => this.boardapi.updateColumnById(id, result.name))
+      ).subscribe();
+
   }
 
   onColumnMove(event: CdkDragDrop<IColumn[]>, board: IBoard) {

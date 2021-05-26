@@ -8,7 +8,7 @@
     <cdk-virtual-scroll-viewport  orientation="horizontal" itemSize="20" class="column-list-viewport">
       <!-- #TODO Create a column component -->
       <div cdkDropList [cdkDropListData]="board.columns" cdkDropListOrientation="horizontal" (cdkDropListDropped)="onColumnMove($event, board)" class="column-list">
-        <app-column *cdkVirtualFor="let column of board.columns" [column]="column" class="board-column mat-elevation-z3" cdkDrag>
+        <app-column (onEditClick)="openColumnEditDialog(column.name, column.id)" *cdkVirtualFor="let column of board.columns" [column]="column" class="board-column mat-elevation-z3" cdkDrag>
           
         </app-column>
       </div>

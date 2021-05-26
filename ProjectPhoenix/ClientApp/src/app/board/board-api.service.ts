@@ -20,6 +20,12 @@ export class BoardApiService {
     );
   }
 
+  updateColumnById(id: string, name: string){
+    return this.http.put<number>(this.baseUrl + 'api/columns/' + id, { name }).pipe(
+      tap(console.log)
+    );
+  }
+
   getBoards(): Observable<IBoard[]>{
     return this.http.get<IBoard[]>(this.baseUrl + 'api/boards').pipe(
       tap(console.log)

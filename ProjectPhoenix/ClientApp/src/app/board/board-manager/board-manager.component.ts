@@ -34,7 +34,7 @@ export class BoardManagerComponent implements OnInit {
       {
         data: { name, id },
         disableClose: true
-      })
+      });
 
     dialogRef.afterClosed().pipe(
       filter(result => result.success),
