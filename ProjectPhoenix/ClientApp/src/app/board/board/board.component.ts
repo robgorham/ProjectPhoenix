@@ -17,7 +17,6 @@ import { IBoard, IColumn, mockBoards } from '../board-models';
 export class BoardComponent implements OnInit {
 
   board$: BehaviorSubject<IBoard> = new BehaviorSubject(null);
-  //board$: Observable<IBoard>;
 
   board: IBoard;
   columns: IColumn[];
@@ -35,13 +34,15 @@ export class BoardComponent implements OnInit {
 
 
     let mb = { ...mockBoards[0] };
-    const cols: IColumn[] = Array.from({ length: 8 }).map((_, i) => ({ ...mb.columns[0], id: i.toString(), name: `col ${i + 1}`, order:i }));
+    const cols: IColumn[] = Array.from({ length: 8 }).map((_, i) => ({ ...mb.columns[0], id: i.toString(), name: `col ${i + 1}`, order: i }));
     mb.columns = [...cols];
     this.board = mb;
   }
-  oc(obj: any){
+
+  oc(obj: any): void{
     console.log(`obj: ${JSON.stringify(obj)}`);
   }
+
   openColumnEditDialog(name: string, id: string): void {
     const dialogRef = this.dialog.open(BoardEditComponent,
       {
@@ -59,16 +60,19 @@ export class BoardComponent implements OnInit {
   onColumnMove(event: CdkDragDrop<IColumn[]>, board: IBoard) {
     const cols = board.columns;
     console.log('board.column before moved', JSON.stringify(board.columns.map(x => x.id)));
-    //moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     moveItemInArray(board.columns, event.previousIndex, event.currentIndex);
     console.log('column maybe moved', JSON.stringify(board.columns.map(x => ({ id: x.id, name: x.name, order: x.order }))));
-    this.board = { ...board, columns: [...cols] };
+    this.board = { ...board, columns: [...cols.map((column, idx) => ({...column, order: idx}))] };
+    this.board$.next(this.board);
+    this.boardapi.updateBoardById(this.board.id, this.board).subscribe();
   }
+  
   onAddColumnClick(board: IBoard) {
     this.boardapi.addColumn(board, 'Blank ').pipe(
       debounceTime(500),
       switchMap(_ => this.boardapi.getBoardById(board.id)),
-      tap(board => this.board$.next(board))
+      tap(updatedBoard => this.board$.next(updatedBoard))
     ).subscribe();
 
   }

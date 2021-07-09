@@ -21,7 +21,7 @@ namespace ProjectPhoenix.Controllers
 
     public class BoardsController : ControllerBase
     {
-        public class BoardDTO : BaseModel, IBoard
+        public class BoardDTO : BaseModel
         {
             public BoardDTO(Board board)
             {
@@ -30,11 +30,11 @@ namespace ProjectPhoenix.Controllers
                 this.id = board.id;
                 this.createDate = board.createDate;
                 this.modifyDate = board.modifyDate;
-                this.Columns = board?.Columns;
+                this.columns = board?.Columns;
             }
             public string name { get; set; }
             public string username { get; set; }
-            public IList <Column> Columns { get; set; }
+            public IList <Column> columns { get; set; }
         }
         
 
@@ -43,7 +43,6 @@ namespace ProjectPhoenix.Controllers
         public BoardsController (ApplicationDbContext context)
         {
             _context = context;
-            
         }
         
 
@@ -133,6 +132,7 @@ namespace ProjectPhoenix.Controllers
         public class PutModel {
             public PutModel() { }
             public string name { get; set; }
+            public BoardDTO board { get; set; } = null;
         }
         // PUT api/<BoardsController>/5
         [HttpPut("{id}")]
@@ -142,14 +142,19 @@ namespace ProjectPhoenix.Controllers
                 return BadRequest("Not a valid model");
             initUser();
             var result = _context.Boards
+                            .Include(board => board.Columns.OrderBy(c => c.order))
                             .FirstOrDefault<Board>(board => board.id == id && board.user.Id == _user.Id);
             
             if(result is not null)
             {
                 result.name = data.name;
                 result.modifyDate = DateTime.Now;
+                // result.Columns = data.board.Columns;
                 var success = _context.SaveChanges();
-                return Ok(success);
+                _context.Columns.UpdateRange(data.board.columns);
+                var success2 = _context.SaveChanges();
+                
+                return Ok(success + success2);
 
             }
             return NotFound(id);

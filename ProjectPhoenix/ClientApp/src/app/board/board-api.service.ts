@@ -37,8 +37,8 @@ export class BoardApiService {
     )
   }
 
-  updateBoardById(id: string, name: string) {
-    return this.http.put<number>(this.baseUrl + 'api/boards/' + id, { name }).pipe(
+  updateBoardById(id: string, board: IBoard) {
+    return this.http.put<number>(this.baseUrl + 'api/boards/' + id, { name: board.name, board }).pipe(
       tap(console.log)
     );
   }

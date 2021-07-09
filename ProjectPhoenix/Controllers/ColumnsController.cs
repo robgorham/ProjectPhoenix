@@ -14,13 +14,18 @@ using Microsoft.AspNetCore.Authorization;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ProjectPhoenix.Controllers
-{   
+{
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
 
     public class ColumnsController : ControllerBase
     {
+        public class PutModel
+        {
+            public PutModel() { }
+            public string name { get; set; }
+        }
         public class BoardDTO : BaseModel, IBoard
         {
             public BoardDTO(Board board)
@@ -34,18 +39,17 @@ namespace ProjectPhoenix.Controllers
             }
             public string name { get; set; }
             public string username { get; set; }
-            public IList <Column> Columns { get; set; }
+            public IList<Column> Columns { get; set; }
         }
-        
+
 
         private ApplicationDbContext _context;
         private ApplicationUser _user;
-        public ColumnsController (ApplicationDbContext context)
+        public ColumnsController(ApplicationDbContext context)
         {
             _context = context;
-            
         }
-        
+
 
         private void initUser()
         {
@@ -53,7 +57,7 @@ namespace ProjectPhoenix.Controllers
             _user = _context.Users.First<ApplicationUser>(u => u.Id == someu);
         }
 
-        
+
         [HttpGet("seed/{quantity}")]
 
         public ActionResult Seed(int quantity)
@@ -84,7 +88,7 @@ namespace ProjectPhoenix.Controllers
         }
 
         // GET: api/<BoardsController>
-        [HttpGet]   
+        [HttpGet]
         public IEnumerable<BoardDTO> Get()
         {
             initUser();
@@ -93,19 +97,19 @@ namespace ProjectPhoenix.Controllers
                                     .Where(board => board.user.Id == _user.Id)
                                     .ToList();
             List<BoardDTO> result = new List<BoardDTO>();
-            foreach(Board board in boards)
+            foreach (Board board in boards)
             {
                 result.Add(new BoardDTO(board));
             }
 
-            if(result.Count() == 0)
+            if (result.Count() == 0)
             {
                 return Array.Empty<BoardDTO>();
             }
             return result;
         }
 
-       
+
 
         // GET api/<BoardsController>/5
         [HttpGet("{id}")]
@@ -130,21 +134,17 @@ namespace ProjectPhoenix.Controllers
             _context.SaveChanges();
         }
 
-        public class PutModel {
-            public PutModel() { }
-            public string name { get; set; }
-        }
-        // PUT api/<BoardsController>/5
+        // PUT api/<ColumnsController>/5
         [HttpPut("{id}")]
         public ActionResult Put(Guid id, [FromBody] PutModel data)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Not a valid model");
             initUser();
-            var result = _context.Boards
-                            .FirstOrDefault<Board>(board => board.id == id && board.user.Id == _user.Id);
-            
-            if(result is not null)
+            var result = _context.Columns
+                            .FirstOrDefault<Column>(column => column.id == id && column.user.Id == _user.Id);
+
+            if (result is not null)
             {
                 result.name = data.name;
                 result.modifyDate = DateTime.Now;
