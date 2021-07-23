@@ -17,11 +17,15 @@ export class ColumnComponent implements OnInit {
 
   @Input() column: any;
   // tslint:disable-next-line: no-output-on-prefix
-  @Output() onEditClick = new EventEmitter<{name: string, id: string}>();
+  @Output() onEditClick = new EventEmitter<{ name: string, id: string }>();
+  @Output() onDeleteClick = new EventEmitter<{ id: string }>();
   ngOnInit(): void {
   }
   openEditDialog(name: string, id: string): void {
     this.onEditClick.emit({name: name, id: id});
+  }
+  openDeleteDialog(id: string): void {
+    this.onDeleteClick.emit({ id });
   }
 
 }

@@ -26,6 +26,12 @@ export class BoardApiService {
     );
   }
 
+  deleteColumnById(id: string) {
+    return this.http.delete<number>(this.baseUrl + 'api/columns/' + id).pipe(
+      tap(console.log)
+    );
+  }
+
   getBoards(): Observable<IBoard[]>{
     return this.http.get<IBoard[]>(this.baseUrl + 'api/boards').pipe(
       tap(console.log)

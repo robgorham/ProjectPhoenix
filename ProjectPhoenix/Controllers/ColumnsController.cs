@@ -155,13 +155,14 @@ namespace ProjectPhoenix.Controllers
             return NotFound(id);
         }
 
-        // DELETE api/<BoardsController>/5
+        // DELETE api/<ColumnsController>/5
         [HttpDelete("{id}")]
         public ActionResult Delete(Guid id)
         {
-            initUser();
-            var result = _context.Boards
-                            .FirstOrDefault<Board>(board => board.id == id && board.user.Id == _user.Id);
+            var _user_id = User.Claims.Where(c => c.Type == "sub").FirstOrDefault().Value;
+            Column result = _context.Columns
+                                .Where(column => column.id == id && column.user.Id == _user_id)
+                                .FirstOrDefault();
             if (result != null)
             {
                 _context.Entry(result).State = EntityState.Deleted;
@@ -172,7 +173,7 @@ namespace ProjectPhoenix.Controllers
             return NotFound(id);
         }
 
-        [HttpPost("{id}/columns")]
+        [HttpPost("{id}")]
         public ActionResult AddColumnToBoardById(Guid id, [FromBody] PutModel data)
         {
             var value = data.name;

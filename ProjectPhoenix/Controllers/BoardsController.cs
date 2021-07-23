@@ -26,7 +26,7 @@ namespace ProjectPhoenix.Controllers
             public BoardDTO(Board board)
             {
                 this.name = board.name;
-                this.username = board.user.UserName;
+                //this.username = board.user.UserName;
                 this.id = board.id;
                 this.createDate = board.createDate;
                 this.modifyDate = board.modifyDate;
@@ -39,7 +39,7 @@ namespace ProjectPhoenix.Controllers
         
 
         private ApplicationDbContext _context;
-        private ApplicationUser _user;
+        private string _user_id;
         public BoardsController (ApplicationDbContext context)
         {
             _context = context;
@@ -48,8 +48,7 @@ namespace ProjectPhoenix.Controllers
 
         private void initUser()
         {
-            var someu = User.Claims.Where(c => c.Type == "sub").FirstOrDefault().Value;
-            _user = _context.Users.First<ApplicationUser>(u => u.Id == someu);
+            _user_id = User.Claims.Where(c => c.Type == "sub").FirstOrDefault().Value;
         }
 
         
@@ -57,7 +56,8 @@ namespace ProjectPhoenix.Controllers
 
         public ActionResult Seed(int quantity)
         {
-            initUser();
+            
+            var _user = _context.Users.First<ApplicationUser>(u => u.Id == _user_id);
             var result = BoardsDbInitializer.Seed(_context, quantity, _user);
             return Ok(result);
         }
@@ -67,7 +67,7 @@ namespace ProjectPhoenix.Controllers
         public ActionResult DeleteAllBoardsByUser()
         {
             initUser();
-            var allBoardsByUser = _context.Boards.Where(b => b.user.Id == _user.Id);
+            var allBoardsByUser = _context.Boards.Where(b => b.user.Id == _user_id);
             _context.Boards.RemoveRange(allBoardsByUser);
             var result = _context.SaveChanges();
             return Ok(result);
@@ -89,7 +89,7 @@ namespace ProjectPhoenix.Controllers
             initUser();
             List<Board> boards = _context.Boards
                                     .Include(board => board.user)
-                                    .Where(board => board.user.Id == _user.Id)
+                                    .Where(board => board.user.Id == _user_id)
                                     .ToList();
             List<BoardDTO> result = new List<BoardDTO>();
             foreach(Board board in boards)
@@ -110,10 +110,10 @@ namespace ProjectPhoenix.Controllers
         [HttpGet("{id}")]
         public BoardDTO Get(Guid id)
         {
-            initUser();
+            _user_id = User.Claims.Where(c => c.Type == "sub").FirstOrDefault().Value;
             Board result = (Board)_context.Boards
                             .Include(board => board.Columns.OrderBy(c => c.order))
-                            .Where(board => board.id == id && board.user.Id == _user.Id)
+                            .Where(board => board.id == id && board.user.Id == _user_id)
                             .FirstOrDefault();
             return new BoardDTO(result);
         }
@@ -123,7 +123,7 @@ namespace ProjectPhoenix.Controllers
         public void Post([FromBody] PutModel data)
         {
             var value = data.name;
-            initUser();
+            var _user = _context.Users.First<ApplicationUser>(u => u.Id == _user_id);
             var added = new Board { createDate = DateTime.Now, modifyDate = DateTime.Now, id = Guid.NewGuid(), name = value, user = _user };
             _context.Add(added);
             _context.SaveChanges();
@@ -132,7 +132,7 @@ namespace ProjectPhoenix.Controllers
         public class PutModel {
             public PutModel() { }
             public string name { get; set; }
-            public BoardDTO board { get; set; } = null;
+            public Board board { get; set; } = null;
         }
         // PUT api/<BoardsController>/5
         [HttpPut("{id}")]
@@ -142,19 +142,17 @@ namespace ProjectPhoenix.Controllers
                 return BadRequest("Not a valid model");
             initUser();
             var result = _context.Boards
-                            .Include(board => board.Columns.OrderBy(c => c.order))
-                            .FirstOrDefault<Board>(board => board.id == id && board.user.Id == _user.Id);
+                            //.Include(board => board.Columns.OrderBy(c => c.order))
+                            .FirstOrDefault<Board>(board => board.id == id && board.user.Id == _user_id);
             
             if(result is not null)
             {
                 result.name = data.name;
                 result.modifyDate = DateTime.Now;
-                // result.Columns = data.board.Columns;
+                 result.Columns = data.board.Columns;
                 var success = _context.SaveChanges();
-                _context.Columns.UpdateRange(data.board.columns);
-                var success2 = _context.SaveChanges();
                 
-                return Ok(success + success2);
+                return Ok(success);
 
             }
             return NotFound(id);
@@ -166,7 +164,7 @@ namespace ProjectPhoenix.Controllers
         {
             initUser();
             var result = _context.Boards
-                            .FirstOrDefault<Board>(board => board.id == id && board.user.Id == _user.Id);
+                            .FirstOrDefault<Board>(board => board.id == id && board.user.Id == _user_id);
             if (result != null)
             {
                 _context.Entry(result).State = EntityState.Deleted;
@@ -184,7 +182,7 @@ namespace ProjectPhoenix.Controllers
             initUser();
             Board candidateBoard = _context.Boards
                            .Include(board => board.Columns)
-                           .Where(board => board.id == id && board.user.Id == _user.Id)
+                           .Where(board => board.id == id && board.user.Id == _user_id)
                            .FirstOrDefault();
             if (candidateBoard is not null)
             {
@@ -192,6 +190,7 @@ namespace ProjectPhoenix.Controllers
                 {
                     candidateBoard.Columns = new List<Column>();
                 }
+                var _user = _context.Users.First<ApplicationUser>(u => u.Id == _user_id);
                 var added = new Column
                 {
                     BoardId = candidateBoard.id,

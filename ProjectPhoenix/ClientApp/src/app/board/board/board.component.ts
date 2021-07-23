@@ -3,10 +3,11 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { debounceTime, filter, finalize, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { debounceTime, filter, finalize, startWith, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { BoardApiService } from '../board-api.service';
 import { BoardEditComponent } from '../board-edit/board-edit.component';
 import { IBoard, IColumn, mockBoards } from '../board-models';
+import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-board',
@@ -52,7 +53,10 @@ export class BoardComponent implements OnInit {
       dialogRef.afterClosed().pipe(
         filter(result => result.success),
         tap(console.log),
-        switchMap(result => this.boardapi.updateColumnById(id, result.name))
+        switchMap(result => this.boardapi.updateColumnById(id, result.name)),
+        withLatestFrom(this.board$),
+        switchMap(([_, board])=> this.boardapi.getBoardById(board.id)),
+        tap(board => this.board$.next(board))
       ).subscribe();
 
   }
@@ -67,7 +71,20 @@ export class BoardComponent implements OnInit {
     this.board$.next(this.board);
     this.boardapi.updateBoardById(this.board.id, this.board).subscribe();
   }
-  
+
+  deleteColumn(id: string): void {
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      disableClose: true
+    })
+
+    dialogRef.afterClosed().pipe(
+      filter(result => result.success),
+      switchMap(() => this.boardapi.deleteColumnById(id)),
+      withLatestFrom(this.board$),
+      switchMap(([_, board]) => this.boardapi.getBoardById(board.id)),
+      tap(board => this.board$.next(board))
+    ).subscribe();
+  }
   onAddColumnClick(board: IBoard) {
     this.boardapi.addColumn(board, 'Blank ').pipe(
       debounceTime(500),
