@@ -26,7 +26,6 @@ namespace ProjectPhoenix.Controllers
             public BoardDTO(Board board)
             {
                 this.name = board.name;
-                //this.username = board.user.UserName;
                 this.id = board.id;
                 this.createDate = board.createDate;
                 this.modifyDate = board.modifyDate;
@@ -202,7 +201,7 @@ namespace ProjectPhoenix.Controllers
                 };
                 candidateBoard.Columns.Add(added);
                 candidateBoard.modifyDate = DateTime.Now;
-                _context.Columns.Add(added);
+                //_context.Columns.Add(added);
                 _context.Entry<Board>(candidateBoard).State = EntityState.Modified;
                 try
                 {

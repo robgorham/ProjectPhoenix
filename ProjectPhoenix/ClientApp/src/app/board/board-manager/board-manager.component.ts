@@ -39,6 +39,7 @@ export class BoardManagerComponent implements OnInit {
     dialogRef.afterClosed().pipe(
       filter(result => result.success),
       tap(console.log),
+      // #TODO Change this updateBoardById to be written correctly
       switchMap(result => this.boardapi.updateBoardById(id, result.name)),
       tap(() => this.boards$ = this.boardapi.getBoards())
     ).subscribe();
