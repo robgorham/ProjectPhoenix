@@ -98,10 +98,10 @@ namespace ProjectPhoenix.Controllers
         {
             initUser();
             var user = _context.Users.First<ApplicationUser>(u => u.Id == _user_id);
-            Board board = (Board)_context.Boards
+            Board board = _context.Boards
                             .Where(board => board.id == card.BoardId && board.user.Id == _user_id)
                             .FirstOrDefault();
-            Column column = (Column)_context.Columns
+            Column column =_context.Columns
                             .Include(column => column.user)
                             .Include(column => column.ItemCards)
                             .Where(column => column.id == card.ColumnId && column.user.Id == _user_id)
