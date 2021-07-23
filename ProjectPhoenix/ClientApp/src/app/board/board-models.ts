@@ -12,6 +12,7 @@ export interface IBoard extends IBaseModel {
   name: string;
   username: string;
   columns?: IColumn[] | null;
+  order?: number;
 }
 
 export interface IColumn extends IBaseModel {

@@ -7,11 +7,15 @@
   flex-direction: row;
   justify-content: space-evenly;
 }
+#board-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 
 .board-column {
   width: 200px;
   margin: 1em;
-  min-height: 100px;
 }
 .cdk-drag-preview {
   box-sizing: border-box;
@@ -34,16 +38,4 @@
   flex-direction: row;
 }
 
-  .column-list-viewport .cdk-virtual-scroll-content-wrapper .column-list .column-header {
-    display: flex;
-    justify-content: space-between;
-  }
-    .column-list-viewport .cdk-virtual-scroll-content-wrapper .column-list .column-header .column-name {
-      padding-top: .1em;
-    }
-    .column-list-viewport .cdk-virtual-scroll-content-wrapper .column-list .column-header .column-buttons {
-      display: flex;
-    }
-      .column-list-viewport .cdk-virtual-scroll-content-wrapper .column-list .column-header .column-buttons mat-icon {
-        margin-right: .1em;
-      }
+  

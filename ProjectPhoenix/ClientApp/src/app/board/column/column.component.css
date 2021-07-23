@@ -1,0 +1,14 @@
+.column-header {
+    display: flex;
+    justify-content: space-between;
+  }
+    .column-header .column-name {
+      padding-top: .1em;
+    }
+    .column-header .column-buttons {
+      display: flex;
+    }
+      .column-header .column-buttons mat-icon {
+        margin-right: .1em;
+      }
+    

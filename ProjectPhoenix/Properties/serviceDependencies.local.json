@@ -3,18 +3,6 @@
     "mssql1": {
       "type": "mssql.local",
       "connectionId": "DefaultConnection"
-    },
-    "secrets1": {
-      "resourceId": null,
-      "type": "secrets.user",
-      "connectionId": null,
-      "secretStore": null
-    },
-    "appInsights1": {
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/microsoft.insights/components/appInsights-test",
-      "type": "appInsights.azure",
-      "connectionId": "APPINSIGHTS_CONNECTIONSTRING",
-      "secretStore": "LocalSecretsFile"
     }
   }
 }

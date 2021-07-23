@@ -1,0 +1,11 @@
+<mat-card>
+    <mat-card-title class="column-header">
+      <p class="column-name">
+        {{column.name}}
+      </p>
+      <div class="column-buttons">
+        <button mat-icon-button color="primary"  aria-label="Edit"  (click)="openEditDialog(column.name, column.id)"><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button color="warn" (click)="openDeleteDialog(column.id)"><mat-icon>delete</mat-icon></button>
+      </div>
+    </mat-card-title>
+  </mat-card>

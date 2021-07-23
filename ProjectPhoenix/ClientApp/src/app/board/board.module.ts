@@ -16,10 +16,11 @@ import { BoardManagerComponent } from '../board/board-manager/board-manager.comp
 import { BoardEditComponent } from './board-edit/board-edit.component';
 import { FormsModule } from '@angular/forms';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { ColumnComponent } from './column/column.component';
 
 
 @NgModule({
-  declarations: [BoardComponent, BoardManagerComponent, BoardEditComponent],
+  declarations: [BoardComponent, BoardManagerComponent, BoardEditComponent, ColumnComponent],
   imports: [
     CommonModule,
     DragDropModule,

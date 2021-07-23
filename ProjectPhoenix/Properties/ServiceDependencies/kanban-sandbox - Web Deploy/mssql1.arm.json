@@ -4,7 +4,7 @@
   "parameters": {
     "resourceGroupName": {
       "type": "string",
-      "defaultValue": "upmc-personsimulator",
+      "defaultValue": "Sandbox",
       "metadata": {
         "_parameterType": "resourceGroup",
         "description": "Name of the resource group for the resource. It is recommended to put resources under same resource group for better tracking."
@@ -12,7 +12,7 @@
     },
     "resourceGroupLocation": {
       "type": "string",
-      "defaultValue": "eastus2",
+      "defaultValue": "eastus",
       "metadata": {
         "_parameterType": "location",
         "description": "Location of the resource group. Resource groups could have different location than resources."
@@ -36,7 +36,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "[concat(parameters('resourceGroupName'), 'Deployment', uniqueString(concat('appInsights-test', subscription().subscriptionId)))]",
+      "name": "[concat(parameters('resourceGroupName'), 'Deployment', uniqueString(concat('ProjectPhoenix', subscription().subscriptionId)))]",
       "resourceGroup": "[parameters('resourceGroupName')]",
       "apiVersion": "2019-10-01",
       "dependsOn": [
@@ -45,16 +45,31 @@
       "properties": {
         "mode": "Incremental",
         "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
           "contentVersion": "1.0.0.0",
           "resources": [
             {
-              "name": "appInsights-test",
-              "type": "microsoft.insights/components",
+              "kind": "v12.0",
               "location": "[parameters('resourceLocation')]",
-              "kind": "web",
-              "properties": {},
-              "apiVersion": "2015-05-01"
+              "name": "projectphoenix",
+              "type": "Microsoft.Sql/servers",
+              "apiVersion": "2017-10-01-preview"
+            },
+            {
+              "sku": {
+                "name": "GP_S_Gen5",
+                "tier": "GeneralPurpose",
+                "family": "Gen5",
+                "capacity": 1
+              },
+              "kind": "v12.0,user,vcore,serverless",
+              "location": "[parameters('resourceLocation')]",
+              "name": "projectphoenix/ProjectPhoenix",
+              "type": "Microsoft.Sql/servers/databases",
+              "apiVersion": "2017-10-01-preview",
+              "dependsOn": [
+                "projectphoenix"
+              ]
             }
           ]
         }
@@ -62,6 +77,6 @@
     }
   ],
   "metadata": {
-    "_dependencyType": "appInsights.azure"
+    "_dependencyType": "mssql.azure"
   }
 }

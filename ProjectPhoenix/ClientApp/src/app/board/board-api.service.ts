@@ -9,8 +9,27 @@ import { IBoard } from './board-models';
   providedIn: 'root'
 })
 export class BoardApiService {
+
   constructor(private http: HttpClient,  @Inject('BASE_URL') private baseUrl: string) {
 
+  }
+
+  addColumn(board: IBoard, name: string) : Observable<any> {
+    return this.http.post(this.baseUrl + 'api/boards/' + board.id + '/columns', { name }).pipe(
+      tap(res => console.log(JSON.stringify(res)))
+    );
+  }
+
+  updateColumnById(id: string, name: string){
+    return this.http.put<number>(this.baseUrl + 'api/columns/' + id, { name }).pipe(
+      tap(console.log)
+    );
+  }
+
+  deleteColumnById(id: string) {
+    return this.http.delete<number>(this.baseUrl + 'api/columns/' + id).pipe(
+      tap(console.log)
+    );
   }
 
   getBoards(): Observable<IBoard[]>{
@@ -24,8 +43,8 @@ export class BoardApiService {
     )
   }
 
-  updateBoardById(id: string, name: string) {
-    return this.http.put<number>(this.baseUrl + 'api/boards/' + id, { name }).pipe(
+  updateBoardById(id: string, board: IBoard) {
+    return this.http.put<number>(this.baseUrl + 'api/boards/' + id, { name: board.name, board }).pipe(
       tap(console.log)
     );
   }
