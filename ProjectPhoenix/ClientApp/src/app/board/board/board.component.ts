@@ -19,7 +19,6 @@ export class BoardComponent implements OnInit {
 
   board$: BehaviorSubject<IBoard> = new BehaviorSubject(null);
 
-  board: IBoard;
   columns: IColumn[];
 
   constructor(private route: ActivatedRoute,public dialog: MatDialog,
@@ -32,12 +31,6 @@ export class BoardComponent implements OnInit {
       switchMap(params => this.boardapi.getBoardById(params.get('id'))),
       tap(board => this.board$.next(board))
     ).subscribe();
-
-
-    let mb = { ...mockBoards[0] };
-    const cols: IColumn[] = Array.from({ length: 8 }).map((_, i) => ({ ...mb.columns[0], id: i.toString(), name: `col ${i + 1}`, order: i }));
-    mb.columns = [...cols];
-    this.board = mb;
   }
 
   oc(obj: any): void{
@@ -67,9 +60,9 @@ export class BoardComponent implements OnInit {
     // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     moveItemInArray(board.columns, event.previousIndex, event.currentIndex);
     console.log('column maybe moved', JSON.stringify(board.columns.map(x => ({ id: x.id, name: x.name, order: x.order }))));
-    this.board = { ...board, columns: [...cols.map((column, idx) => ({...column, order: idx}))] };
-    this.board$.next(this.board);
-    this.boardapi.updateBoardById(this.board.id, this.board).subscribe();
+    const boardResult = { ...board, columns: [...cols.map((column, idx) => ({...column, order: idx}))] };
+    this.board$.next(boardResult);
+    this.boardapi.updateBoardById(boardResult.id, boardResult).subscribe();
   }
 
   deleteColumn(id: string): void {
