@@ -55,7 +55,6 @@ export class BoardComponent implements OnInit {
   onColumnMove(event: CdkDragDrop<IColumn[]>, board: IBoard) {
     const cols = board.columns;
     console.log('board.column before moved', JSON.stringify(board.columns.map(x => x.id)));
-    // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     moveItemInArray(board.columns, event.previousIndex, event.currentIndex);
     console.log('column maybe moved', JSON.stringify(board.columns.map(x => ({ id: x.id, name: x.name, order: x.order }))));
     const boardResult = { ...board, columns: [...cols.map((column, idx) => ({...column, order: idx}))] };
