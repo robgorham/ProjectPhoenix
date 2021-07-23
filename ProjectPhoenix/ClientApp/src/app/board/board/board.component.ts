@@ -19,8 +19,6 @@ export class BoardComponent implements OnInit {
 
   board$: BehaviorSubject<IBoard> = new BehaviorSubject(null);
 
-  columns: IColumn[];
-
   constructor(private route: ActivatedRoute,public dialog: MatDialog,
     private router: Router, private boardapi: BoardApiService) {
     
