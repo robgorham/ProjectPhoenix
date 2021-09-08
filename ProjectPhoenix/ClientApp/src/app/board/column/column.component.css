@@ -13,3 +13,16 @@
       .column-header .column-buttons mat-icon {
         margin-right: .1em;
       }
+
+.item-cards-list {
+  display: flex;
+  width: 100px;
+  min-height: 50px;
+  flex-direction: column;
+}
+
+.card {
+  width: 100px;
+  margin: .2em 0 0 .2em;
+  min-height: 50px;
+}

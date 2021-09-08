@@ -1,8 +1,9 @@
 .list-group {
-  width: 960px;
+  min-width: 480px;
   background-color: lightgrey;
   width: 100%;
-  min-height: 600px;
+
+  min-height: 400px;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
@@ -26,7 +27,7 @@
   opacity: 0.2;
 }
 .column-list-viewport {
-  max-height: 800px;
+  max-height: 1200px;
   width: 100%;
 }
 .cdk-drag-animating {

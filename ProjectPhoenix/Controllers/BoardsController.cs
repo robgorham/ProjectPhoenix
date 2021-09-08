@@ -113,6 +113,7 @@ namespace ProjectPhoenix.Controllers
             _user_id = User.Claims.Where(c => c.Type == "sub").FirstOrDefault().Value;
             Board result = (Board)_context.Boards
                             .Include(board => board.Columns.OrderBy(c => c.order))
+                            .ThenInclude(column => column.ItemCards)
                             .Where(board => board.id == id && board.user.Id == _user_id)
                             .FirstOrDefault();
             return new BoardDTO(result);
