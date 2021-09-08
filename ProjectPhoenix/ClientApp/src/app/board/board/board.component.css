@@ -1,6 +1,6 @@
 .list-group {
   width: 960px;
-  background-color: antiquewhite;
+  background-color: lightgrey;
   width: 100%;
   min-height: 600px;
   display: flex;
@@ -14,8 +14,8 @@
 }
 
 .board-column {
-  width: 200px;
-  margin: 1em;
+  width: 250px;
+  margin: .2em 0 0 .2em;
 }
 .cdk-drag-preview {
   box-sizing: border-box;
@@ -38,4 +38,3 @@
   flex-direction: row;
 }
 
-  

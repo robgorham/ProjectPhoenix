@@ -83,11 +83,12 @@ namespace ProjectPhoenix.Controllers
 
         // GET: api/<BoardsController>
         [HttpGet]   
-        public IEnumerable<BoardDTO> Get()
+        public IEnumerable<Board> Get()
         {
             initUser();
             List<Board> boards = _context.Boards
-                                    .Include(board => board.user)
+                                    .Include(board => board.Columns)
+                                    .ThenInclude(column => column.ItemCards)
                                     .Where(board => board.user.Id == _user_id)
                                     .ToList();
             List<BoardDTO> result = new List<BoardDTO>();
@@ -98,9 +99,9 @@ namespace ProjectPhoenix.Controllers
 
             if(result.Count() == 0)
             {
-                return Array.Empty<BoardDTO>();
+                return Array.Empty<Board>();
             }
-            return result;
+            return boards;
         }
 
        

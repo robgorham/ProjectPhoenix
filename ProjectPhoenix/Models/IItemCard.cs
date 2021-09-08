@@ -10,8 +10,8 @@ namespace ProjectPhoenix.Models
         string Name { get; set; }
         string Description { get; set; }
         int Order { get; set; }
-        Board Board { get; set; }
-        Column Column { get; set; }
+        Guid BoardId { get; set; }
+        Guid ColumnId { get; set; }
         ApplicationUser User { get; set; }
 
     }

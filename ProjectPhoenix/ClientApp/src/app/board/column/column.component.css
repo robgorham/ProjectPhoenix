@@ -3,7 +3,9 @@
     justify-content: space-between;
   }
     .column-header .column-name {
-      padding-top: .1em;
+      vertical-align: central;
+      padding-top: .5em;
+      font-size:medium;
     }
     .column-header .column-buttons {
       display: flex;
@@ -11,4 +13,3 @@
       .column-header .column-buttons mat-icon {
         margin-right: .1em;
       }
-    

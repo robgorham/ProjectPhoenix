@@ -36,8 +36,8 @@ namespace ProjectPhoenix.Controllers
                 this.id = itemCard.id;
                 this.createDate = itemCard.createDate;
                 this.modifyDate = itemCard.modifyDate;
-                this.ColumnId = itemCard.Column.id;
-                this.BoardId = itemCard.Board.id;
+                this.ColumnId = itemCard.ColumnId;
+                this.BoardId = itemCard.BoardId;
                 this.Description = itemCard.Description;
                 this.Order = itemCard.Order;
             }
@@ -57,8 +57,8 @@ namespace ProjectPhoenix.Controllers
             initUser();
             var card = _context.ItemCards
                 .Include(card => card.User)
-                .Include(card => card.Board)
-                .Include(card => card.Column)
+                //.Include(card => card.Board)
+                //.Include(card => card.Column)
                 .Where(card => card.User.Id == _user_id)
                 .Where(card => card.id == id)
                 .FirstOrDefault();
@@ -72,10 +72,8 @@ namespace ProjectPhoenix.Controllers
 
             var cards = _context.ItemCards
                         .Include(card => card.User)
-                .Include(card => card.Board)
-                .Include(card => card.Column)
                 .Where(card => card.User.Id == _user_id)
-                .Where(card => card.Column.id == id)
+                .Where(card => card.ColumnId == id)
                 .ToList<ItemCard>();
             var cardsDTOList = new List<ItemCardGetDTOModel>();
             foreach(ItemCard itemcard in cards)
@@ -115,8 +113,8 @@ namespace ProjectPhoenix.Controllers
             var addedCard = new ItemCard
             {
                 Name = card.Name,
-                Board = board,
-                Column = column,
+                BoardId = board.id,
+                ColumnId = column.id,
                 User = user,
                 createDate = DateTime.Now,
                 modifyDate = DateTime.Now,
@@ -136,10 +134,32 @@ namespace ProjectPhoenix.Controllers
             }
         }
 
+        public class ItemCardPutDTOModel
+        {
+            public string Description { get; set; }
+            public int Order { get; set; }
+            public string Name { get; set; }
+            public Guid id { get; set; }
+        }
+
         // PUT api/<ItemCardsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult Put(Guid id, [FromBody] ItemCardPutDTOModel cardDTO)
         {
+            if (!ModelState.IsValid)
+                return BadRequest("Not a valid model");
+            var card = _context.ItemCards
+                        .Where(card => card.id == id)
+                        .FirstOrDefault();
+            if(card is not null)
+            {
+                card.Name = cardDTO.Name;
+                card.Description = cardDTO.Description;
+                card.Order = cardDTO.Order;
+                var success = _context.SaveChanges();
+                return Ok(success);
+            }
+            return NotFound(cardDTO);
         }
 
         // DELETE api/<ItemCardsController>/5
