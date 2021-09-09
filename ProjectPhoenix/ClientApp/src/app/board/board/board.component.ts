@@ -34,6 +34,9 @@ export class BoardComponent implements OnInit {
   oc(obj: any): void{
     console.log(`obj: ${JSON.stringify(obj)}`);
   }
+  openAddItemCardDialog(column: IColumn): void {
+
+  }
 
   openColumnEditDialog(name: string, id: string): void {
     const dialogRef = this.dialog.open(BoardEditComponent,
@@ -54,9 +57,7 @@ export class BoardComponent implements OnInit {
 
   onColumnMove(event: CdkDragDrop<IColumn[]>, board: IBoard) {
     const cols = board.columns;
-    console.log('board.column before moved', JSON.stringify(board.columns.map(x => x.id)));
     moveItemInArray(board.columns, event.previousIndex, event.currentIndex);
-    console.log('column maybe moved', JSON.stringify(board.columns.map(x => ({ id: x.id, name: x.name, order: x.order }))));
     const boardResult = { ...board, columns: [...cols.map((column, idx) => ({...column, order: idx}))] };
     this.board$.next(boardResult);
     this.boardapi.updateBoardById(boardResult.id, boardResult).subscribe();
