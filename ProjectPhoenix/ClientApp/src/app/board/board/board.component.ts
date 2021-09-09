@@ -38,6 +38,11 @@ export class BoardComponent implements OnInit {
 
   }
 
+  getColumnIDs(board: IBoard): any[] {
+    const result = board.columns.map(col => `${col.id}`);
+    return result;
+  }
+
   openColumnEditDialog(name: string, id: string): void {
     const dialogRef = this.dialog.open(BoardEditComponent,
       {

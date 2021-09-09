@@ -1,23 +1,27 @@
 <mat-card>
-  <mat-card-title>
+  <mat-card-subtitle>
     <div class="column-name">
       {{column.name}}
     </div>
     <div class="column-buttons">
-      <button mat-icon-button (click)="addItemCard()">Add</button>
+      <button mat-icon-button aria-label="Add Item" (click)="addItemCard()"><mat-icon>add</mat-icon></button>
       <button mat-icon-button color="primary" aria-label="Edit" (click)="openEditDialog(column.name, column.id)"><mat-icon>edit</mat-icon></button>
       <button mat-icon-button color="warn" (click)="openDeleteDialog(column.id)"><mat-icon>delete</mat-icon></button>
     </div>
-  </mat-card-title>
+  </mat-card-subtitle>
   <mat-card-content>
-    <div cdkDropList>
-      <ng-container *ngFor="let card of column.itemCards;">
-        <mat-card cdkDrag>
-          <mat-card-subtitle>
-            {{card.name}}
-          </mat-card-subtitle>
-        </mat-card>
-      </ng-container>
+    <div cdkDropList [cdkDropListData]="column.itemCards" [cdkDropListConnectedTo]="linked" id={{column.id}}>
+      <mat-card *ngFor="let card of column.itemCards;" cdkDrag [cdkDragData]="card">
+        <mat-card-subtitle>
+          {{card.name}}
+        </mat-card-subtitle>
+        <mat-card-content>
+          {{card.id}}
+        </mat-card-content>
+      </mat-card>
+      <mat-card *ngIf="column.itemCards.length < 1">
+        Empty Column!
+      </mat-card>
     </div>
   </mat-card-content>
 

@@ -17,6 +17,7 @@ export class ColumnComponent implements OnInit {
   constructor(public dialog: MatDialog, private boardapi: BoardApiService) { }
 
   @Input() column: any;
+  @Input() linked: any[];
   // tslint:disable-next-line: no-output-on-prefix
   @Output() onEditClick = new EventEmitter<{ name: string, id: string }>();
   @Output() onDeleteClick = new EventEmitter<{ id: string }>();
