@@ -143,7 +143,8 @@ namespace ProjectPhoenix.Controllers
                 return BadRequest("Not a valid model");
             initUser();
             var result = _context.Boards
-                            //.Include(board => board.Columns.OrderBy(c => c.order))
+                            .Include(board => board.Columns.OrderBy(c => c.order))
+                            .ThenInclude(column => column.ItemCards)
                             .FirstOrDefault<Board>(board => board.id == id && board.user.Id == _user_id);
             
             if(result is not null)

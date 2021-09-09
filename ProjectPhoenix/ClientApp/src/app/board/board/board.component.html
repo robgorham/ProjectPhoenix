@@ -9,9 +9,10 @@
       <!-- #TODO Create a column component -->
       <div cdkDropList [cdkDropListData]="board.columns" cdkDropListOrientation="horizontal" (cdkDropListDropped)="onColumnMove($event, board)" class="column-list">
         <app-column cdkDropListGroup
-                    (addItemCardClick)="openAddItemCardDialog(column.name, column.id)"
+                    (onItemCardMove)="onItemCardMoveEvent($event, board)"
+                    (addItemCardClick)="onAddItemCardSubmit($event)"
                     [linked]="getColumnIDs(board)"
-                    (onDeleteClick)="deleteColumn(column.id)"
+                    (onDeleteClick)="deleteColumn($event)"
                     (onEditClick)="openColumnEditDialog(column.name, column.id)" *cdkVirtualFor="let column of board.columns" [cdkDragData]="column" [column]="column" class="board-column mat-elevation-z3" cdkDrag>
           
         </app-column>

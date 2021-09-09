@@ -10,17 +10,23 @@ import { IBoard } from './board-models';
 })
 export class BoardApiService {
 
-  constructor(private http: HttpClient,  @Inject('BASE_URL') private baseUrl: string) {
+  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
 
   }
 
-  addColumn(board: IBoard, name: string) : Observable<any> {
+  addItemCardToColumnById(boardId: any, columnId: any, name: string): Observable<any> {
+    return this.http.post(this.baseUrl + 'api/itemcards', { boardId, columnId, name }).pipe(
+      tap(res => console.log(JSON.stringify(res)))
+    )
+  }
+
+  addColumn(board: IBoard, name: string): Observable<any> {
     return this.http.post(this.baseUrl + 'api/boards/' + board.id + '/columns', { name }).pipe(
       tap(res => console.log(JSON.stringify(res)))
     );
   }
 
-  updateColumnById(id: string, name: string){
+  updateColumnById(id: string, name: string) {
     return this.http.put<number>(this.baseUrl + 'api/columns/' + id, { name }).pipe(
       tap(console.log)
     );
@@ -32,7 +38,7 @@ export class BoardApiService {
     );
   }
 
-  getBoards(): Observable<IBoard[]>{
+  getBoards(): Observable<IBoard[]> {
     return this.http.get<IBoard[]>(this.baseUrl + 'api/boards').pipe(
       tap(console.log)
     );

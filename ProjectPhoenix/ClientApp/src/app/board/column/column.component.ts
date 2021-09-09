@@ -1,6 +1,7 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { Component,Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { BoardApiService } from '../board-api.service';
@@ -20,18 +21,35 @@ export class ColumnComponent implements OnInit {
   @Input() linked: any[];
   // tslint:disable-next-line: no-output-on-prefix
   @Output() onEditClick = new EventEmitter<{ name: string, id: string }>();
-  @Output() onDeleteClick = new EventEmitter<{ id: string }>();
+  @Output() onDeleteClick = new EventEmitter<string>();
   @Output() addItemCardClick = new EventEmitter();
+  @Output() onItemCardMove = new EventEmitter<CdkDragDrop<any[]>>();
   ngOnInit(): void {
   }
   openEditDialog(name: string, id: string): void {
-    this.onEditClick.emit({name: name, id: id});
+    this.onEditClick.emit({ name: name, id: id });
   }
   openDeleteDialog(id: string): void {
-    this.onDeleteClick.emit({ id });
+    this.onDeleteClick.emit(id);
   }
-  addItemCard(): void {
-    this.addItemCardClick.emit();
+  addItemCard(template): void {
+    // add dialog ref
+    const dialogRef = this.dialog.open(template, {
+      disableClose: true
+    });
+    // catch after its closed
+    dialogRef.afterClosed().pipe(
+      filter(res => res.success),
+      tap(res => {
+        console.log(res);
+        this.addItemCardClick.emit({columnId: this.column.id, name: res.name, boardId: this.column.boardId })
+      })
+    ).subscribe();
+
+  }
+  drop(event: CdkDragDrop<any[]>) {
+    //console.log(JSON.stringify(event))
+    this.onItemCardMove.emit(event);
   }
 
 }

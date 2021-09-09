@@ -19,6 +19,7 @@ export interface IColumn extends IBaseModel {
   name: string;
   order: number;  // This needs to be unique among the columns associated to a Board
   username: string;
+  itemCards?: any[] | null;
 }
 
 const now = new Date();
