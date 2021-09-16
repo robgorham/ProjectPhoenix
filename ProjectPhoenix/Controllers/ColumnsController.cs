@@ -21,27 +21,34 @@ namespace ProjectPhoenix.Controllers
 
     public class ColumnsController : ControllerBase
     {
-        public class PutModel
+        public class ColumnPutDTOModel : BaseModel
         {
-            public PutModel() { }
-            public string name { get; set; }
-        }
-        public class BoardDTO : BaseModel, IBoard
-        {
-            public BoardDTO(Board board)
+            private IEnumerable<ItemCard> _cards = null;
+            public ColumnPutDTOModel() { }
+            public ColumnPutDTOModel(Column column)
             {
-                this.name = board.name;
-                this.username = board.user.UserName;
-                this.id = board.id;
-                this.createDate = board.createDate;
-                this.modifyDate = board.modifyDate;
-                this.Columns = board?.Columns;
+                this.name = column.name;
+                this.id = column.id;
+                this.createDate = column.createDate;
+                this.modifyDate = column.modifyDate;
+                this.itemCards = column?.ItemCards;
             }
             public string name { get; set; }
-            public string username { get; set; }
-            public IList<Column> Columns { get; set; }
-        }
+            public int order { get; set; }
+            public Guid boardid { get; set; }
 
+            public virtual IEnumerable<ItemCard> itemCards
+            {
+                get
+                {
+                    return this._cards;
+                }
+                set
+                {
+                    this._cards = value;
+                }
+            }
+        }
 
         private ApplicationDbContext _context;
         private ApplicationUser _user;
@@ -58,95 +65,37 @@ namespace ProjectPhoenix.Controllers
         }
 
 
-        [HttpGet("seed/{quantity}")]
-
-        public ActionResult Seed(int quantity)
-        {
-            initUser();
-            var result = BoardsDbInitializer.Seed(_context, quantity, _user);
-            return Ok(result);
-        }
-
-
-        [HttpGet("nuke")]
-        public ActionResult DeleteAllBoardsByUser()
-        {
-            initUser();
-            var allBoardsByUser = _context.Boards.Where(b => b.user.Id == _user.Id);
-            _context.Boards.RemoveRange(allBoardsByUser);
-            var result = _context.SaveChanges();
-            return Ok(result);
-        }
-        [HttpGet("nukenull")]
-        public ActionResult DeleteAllBoardsByNull()
-        {
-            var allBoardsByNull = _context.Boards
-                                    .Where(b => b.user.Id == null);
-            _context.Boards.RemoveRange(allBoardsByNull);
-            var result = _context.SaveChanges();
-            return Ok(result);
-        }
-
-        // GET: api/<BoardsController>
-        [HttpGet]
-        public IEnumerable<BoardDTO> Get()
-        {
-            initUser();
-            List<Board> boards = _context.Boards
-                                    .Include(board => board.user)
-                                    .Where(board => board.user.Id == _user.Id)
-                                    .ToList();
-            List<BoardDTO> result = new List<BoardDTO>();
-            foreach (Board board in boards)
-            {
-                result.Add(new BoardDTO(board));
-            }
-
-            if (result.Count() == 0)
-            {
-                return Array.Empty<BoardDTO>();
-            }
-            return result;
-        }
 
 
 
-        // GET api/<BoardsController>/5
+        // GET api/<ColumnsController>/5
         [HttpGet("{id}")]
-        public BoardDTO Get(Guid id)
+        public ActionResult<Column> Get(Guid id)
         {
             initUser();
-            Board result = (Board)_context.Boards
-                            .Include(board => board.Columns.OrderBy(c => c.order))
-                            .Where(board => board.id == id && board.user.Id == _user.Id)
+            Column result = (Column)_context.Columns
+                            .Include(column => column.ItemCards.OrderBy(c => c.Order))
+                            .Where(column => column.id == id && column.user.Id == _user.Id)
                             .FirstOrDefault();
-            return new BoardDTO(result);
+            return Ok(result);
         }
 
-        // POST api/<BoardsController>
-        [HttpPost]
-        public void Post([FromBody] PutModel data)
-        {
-            var value = data.name;
-            initUser();
-            var added = new Board { createDate = DateTime.Now, modifyDate = DateTime.Now, id = Guid.NewGuid(), name = value, user = _user };
-            _context.Add(added);
-            _context.SaveChanges();
-        }
-
-        // PUT api/<ColumnsController>/5
+       // PUT api/<ColumnsController>/5
         [HttpPut("{id}")]
-        public ActionResult Put(Guid id, [FromBody] PutModel data)
+        public ActionResult Put(Guid id, [FromBody] ColumnPutDTOModel data)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Not a valid model");
             initUser();
             var result = _context.Columns
+                            .Include(column => column.ItemCards)
+                            .Include(column => column.user)
                             .FirstOrDefault<Column>(column => column.id == id && column.user.Id == _user.Id);
 
             if (result is not null)
             {
                 result.name = data.name;
+                result.ItemCards = data.itemCards.ToList();
                 result.modifyDate = DateTime.Now;
                 var success = _context.SaveChanges();
                 return Ok(success);
@@ -174,7 +123,7 @@ namespace ProjectPhoenix.Controllers
         }
 
         [HttpPost("{id}")]
-        public ActionResult AddColumnToBoardById(Guid id, [FromBody] PutModel data)
+        public ActionResult AddColumnToBoardById(Guid id, [FromBody] ColumnPutDTOModel data)
         {
             var value = data.name;
             initUser();

@@ -65,6 +65,7 @@ export class BoardComponent implements OnInit {
       // must map it back into the board, if I need too... :-D
       board.columns[i].itemCards = cardResults;
       console.log('same');
+      this.boardapi.updateColumnById(board.columns[i].id, board.columns[i]).subscribe( res => console.log);
     }
     else {
       // must find both arrays
@@ -76,7 +77,7 @@ export class BoardComponent implements OnInit {
     // must broadcast the result
     // must update the board
     this.board$.next({ ...board });
-    this.boardapi.updateBoardById(board.id, {...board }).subscribe();
+    //this.boardapi.updateBoardById(board.id, {...board }).subscribe();
   }
 
   getColumnIDs(board: IBoard): any[] {
@@ -84,7 +85,8 @@ export class BoardComponent implements OnInit {
     return result;
   }
   onColumnMove(event: CdkDragDrop<IColumn[]>, board: IBoard) {
-    console.log(JSON.stringify(event.container))
+    //console.log(JSON.stringify(event.container))
+    console.log('oncolumnmove');
     const cols = board.columns;
     moveItemInArray(board.columns, event.previousIndex, event.currentIndex);
     const boardResult = { ...board, columns: [...cols.map((column, idx) => ({ ...column, order: idx }))] };

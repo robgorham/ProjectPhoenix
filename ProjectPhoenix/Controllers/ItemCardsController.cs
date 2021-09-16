@@ -56,10 +56,9 @@ namespace ProjectPhoenix.Controllers
         {
             initUser();
             var card = _context.ItemCards
-                .Include(card => card.User)
                 //.Include(card => card.Board)
                 //.Include(card => card.Column)
-                .Where(card => card.User.Id == _user_id)
+                .Where(card => card.User.Id == _user_id )
                 .Where(card => card.id == id)
                 .FirstOrDefault();
             return Ok(new ItemCardGetDTOModel(card));
@@ -71,7 +70,6 @@ namespace ProjectPhoenix.Controllers
             initUser();
 
             var cards = _context.ItemCards
-                        .Include(card => card.User)
                 .Where(card => card.User.Id == _user_id)
                 .Where(card => card.ColumnId == id)
                 .ToList<ItemCard>();
@@ -115,7 +113,7 @@ namespace ProjectPhoenix.Controllers
                 Name = card.Name,
                 BoardId = board.id,
                 ColumnId = column.id,
-                User = user,
+                User= user,
                 createDate = DateTime.Now,
                 modifyDate = DateTime.Now,
                 Order = column.ItemCards.Count() + 1

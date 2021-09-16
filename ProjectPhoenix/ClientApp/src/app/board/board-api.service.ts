@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/internal/operators/tap';
-import { IBoard } from './board-models';
+import { IBoard, IColumn } from './board-models';
 
 
 @Injectable({
@@ -26,8 +26,8 @@ export class BoardApiService {
     );
   }
 
-  updateColumnById(id: string, name: string) {
-    return this.http.put<number>(this.baseUrl + 'api/columns/' + id, { name }).pipe(
+  updateColumnById(id: string, column: IColumn) {
+    return this.http.put<number>(this.baseUrl + 'api/columns/' + id, column).pipe(
       tap(console.log)
     );
   }
