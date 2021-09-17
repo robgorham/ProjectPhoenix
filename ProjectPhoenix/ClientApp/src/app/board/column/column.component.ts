@@ -55,6 +55,7 @@ export class ColumnComponent implements OnInit {
   }
 
   openEditCardDialog(card) {
+    console.log("hit")
     const dialogRef = this.dialog.open(ItemCardEditComponent, {
       data: {name: card.name, id: card.id, description: card.description },
       disableClose: true

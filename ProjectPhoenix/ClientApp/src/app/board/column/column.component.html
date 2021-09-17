@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="mat-elevation-z4">
   <mat-card-subtitle>
     <div class="column-name">
       {{column.name}}
@@ -11,7 +11,7 @@
   </mat-card-subtitle>
   <mat-card-content>
     <div cdkDropList [cdkDropListData]="column.itemCards" (cdkDropListDropped)="drop($event)" [cdkDropListConnectedTo]="linked" id={{column.id}}>
-      <mat-card *ngFor="let card of column.itemCards;" cdkDrag [cdkDragData]="card">
+      <mat-card *ngFor="let card of column.itemCards;" cdkDrag [cdkDragData]="card" class="mat-elevation-z6 card">
         <mat-card-subtitle class="card-header">
           <div class="card-name">
             {{card.name}}
@@ -22,7 +22,7 @@
           </div>
         </mat-card-subtitle>
         <mat-card-content>
-          {{card.id}}
+          {{card.description}}
         </mat-card-content>
       </mat-card>
       <mat-card *ngIf="column.itemCards.length < 1">

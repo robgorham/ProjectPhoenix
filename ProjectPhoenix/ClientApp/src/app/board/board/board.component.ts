@@ -161,7 +161,12 @@ export class BoardComponent implements OnInit {
 
   onEditItemCardSubmit(event: any): void {
     console.log(event);
-    this.boardapi.updateItemCardById(event).subscribe();
+    this.boardapi.updateItemCardById(event).pipe(
+      withLatestFrom(this.board$),
+      debounceTime(500),
+      switchMap(([_, board]) => this.boardapi.getBoardById(board.id)),
+      tap(board => this.board$.next(board))
+    ).subscribe();
   }
 
 
