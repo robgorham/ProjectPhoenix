@@ -13,7 +13,8 @@
                     (addItemCardClick)="onAddItemCardSubmit($event)"
                     [linked]="getColumnIDs(board)"
                     (onDeleteClick)="deleteColumn($event)"
-                    (onEditClick)="openColumnEditDialog(column.name, column.id)" *cdkVirtualFor="let column of board.columns" [cdkDragData]="column" [column]="column" class="board-column mat-elevation-z3" cdkDrag>
+                    (onCardDeleteClick)="deleteCard($event)"
+                    (onEditClick)="openColumnEditDialog(column)" *cdkVirtualFor="let column of board.columns" [cdkDragData]="column" [column]="column" class="board-column mat-elevation-z3" cdkDrag>
           
         </app-column>
       </div>

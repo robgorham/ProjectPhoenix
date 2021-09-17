@@ -134,10 +134,57 @@ namespace ProjectPhoenix.Controllers
 
         public class ItemCardPutDTOModel
         {
-            public string Description { get; set; }
+            public virtual string Description { get; set; }
             public int Order { get; set; }
             public string Name { get; set; }
             public Guid id { get; set; }
+        }
+        public class BulkDTOModel
+        {
+            public Guid ColId1 { get; set; }
+            public Guid ColId2 { get; set; }
+            public virtual IList<ItemCard> Col1Cards {get; set;}
+            public virtual IList<ItemCard> Col2Cards { get; set; }
+            public virtual Guid MovedId { get; set; }
+        }
+
+
+
+        [HttpPost("movebulk")]
+        // POST api/<ItemCardsController>/MoveBulk
+        public ActionResult MoveBulk([FromBody] BulkDTOModel bulkDTO)
+        {
+            var col1Cards = _context.ItemCards.Where(c => c.ColumnId == bulkDTO.ColId1).ToList();
+            var col2Cards = _context.ItemCards.Where(c => c.ColumnId == bulkDTO.ColId2).ToList();
+            var moved = bulkDTO.Col2Cards.Where(c => c.id == bulkDTO.MovedId).FirstOrDefault();
+            var toBeMoved = col1Cards.Where(c => c.id == bulkDTO.MovedId).FirstOrDefault();
+            toBeMoved.ColumnId = bulkDTO.ColId2;
+            toBeMoved.Order = moved.Order;
+            foreach(var currCard in col1Cards)
+            {
+                if(currCard.id == bulkDTO.MovedId)
+                {
+                    continue;
+                }
+                var inCard = bulkDTO.Col1Cards.Where(varCard => varCard.id == currCard.id).FirstOrDefault();
+                currCard.Order = inCard.Order;
+
+            }
+            foreach (var currCard in col2Cards)
+            {
+                var inCard = bulkDTO.Col2Cards.Where(varCard => varCard.id == currCard.id).FirstOrDefault();
+                currCard.Order = inCard.Order;
+
+            }
+            try
+            {
+                var success = _context.SaveChanges();
+                return Ok(success);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
         }
 
         // PUT api/<ItemCardsController>/5
@@ -162,8 +209,26 @@ namespace ProjectPhoenix.Controllers
 
         // DELETE api/<ItemCardsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(Guid id)
         {
+            var card = _context.ItemCards
+                        .Where(card => card.id == id)
+                        .FirstOrDefault();
+            if(card is not null)
+            {
+                try
+                {
+                    _context.Entry(card).State = EntityState.Deleted;
+                    var success = _context.SaveChanges();
+                    return Ok(success);
+                }
+                catch(Exception ex)
+                {
+                    return StatusCode(500, ex);
+                }
+            
+            }
+            return NotFound();
         }
     }
 }

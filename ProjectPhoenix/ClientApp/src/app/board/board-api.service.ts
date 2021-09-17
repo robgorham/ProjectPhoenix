@@ -17,7 +17,19 @@ export class BoardApiService {
   addItemCardToColumnById(boardId: any, columnId: any, name: string): Observable<any> {
     return this.http.post(this.baseUrl + 'api/itemcards', { boardId, columnId, name }).pipe(
       tap(res => console.log(JSON.stringify(res)))
-    )
+    );
+  }
+
+  moveItemCardInArray(postData: any): Observable<any> {
+    return this.http.post(this.baseUrl + 'api/itemcards/movebulk', { ...postData }).pipe(tap(console.log))
+  }
+
+
+
+  deleteItemCardById(cardId: any) {
+    return this.http.delete(this.baseUrl + 'api/itemcards/' + cardId).pipe(
+      tap(console.log)
+    );
   }
 
   addColumn(board: IBoard, name: string): Observable<any> {

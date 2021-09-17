@@ -1,4 +1,4 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -37,6 +37,22 @@ export class BoardComponent implements OnInit {
   openAddItemCardDialog(column: IColumn): void {
 
   }
+
+
+  deleteCard(id: any): void {
+    console.log(id);
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      disableClose: true
+    })
+
+    dialogRef.afterClosed().pipe(
+      filter(result => result.success),
+      switchMap(() => this.boardapi.deleteItemCardById(id)),
+      withLatestFrom(this.board$),
+      switchMap(([_, board]) => this.boardapi.getBoardById(board.id)),
+      tap(board => this.board$.next(board))
+    ).subscribe();
+  }
   onItemCardMoveEvent(event: CdkDragDrop<any[]>, board: IBoard): void {
     console.log(event.container.id);
     const currContainer = event.container;
@@ -65,14 +81,47 @@ export class BoardComponent implements OnInit {
       // must map it back into the board, if I need too... :-D
       board.columns[i].itemCards = cardResults;
       console.log('same');
-      this.boardapi.updateColumnById(board.columns[i].id, board.columns[i]).subscribe( res => console.log);
+      this.boardapi.updateColumnById(board.columns[i].id, board.columns[i]).subscribe(res => console.log);
     }
     else {
       // must find both arrays
-      // must remove item from first
+      transferArrayItem(prevContainer.data, currContainer.data, prevIndex, currIndex);
+      let colId1: any = false;
+      let colId2: any = false;
+      let i = -1;
+      // must find the column in question
+      board.columns.some((col, idx) => {
+        if (col.id === prevContainer.id) {
+          colId1 = col.id;
+          i = idx;
+          return true;
+        }
+        return false;
+      });
+      board.columns.some((col, idx) => {
+        if (col.id === currContainer.id) {
+          colId2 = col.id;
+          i = idx;
+          return true;
+        }
+        return false;
+      });
+      console.log(colId1, colId2);
+      prevContainer.data = [...prevContainer.data.map((curr, idx) => ({ ...curr, order: idx }))]
+      currContainer.data = [...currContainer.data.map((curr, idx) => ({ ...curr, order: idx }))]
+
+      const postData = {
+        colId1, colId2, col1cards: [...prevContainer.data], col2cards: [...currContainer.data], movedId: currContainer.data[currIndex].id
+
+      }
       // must add into second at appropriate index
       // must recreate the order
       console.log('different')
+      console.log(postData)
+      this.boardapi.moveItemCardInArray(postData).pipe(
+        tap(console.log)
+      ).subscribe();
+        ;
     }
     // must broadcast the result
     // must update the board
@@ -93,16 +142,16 @@ export class BoardComponent implements OnInit {
     this.board$.next(boardResult);
     this.boardapi.updateBoardById(boardResult.id, boardResult).subscribe();
   }
-  openColumnEditDialog(name: string, id: string): void {
+  openColumnEditDialog(column: IColumn): void {
     const dialogRef = this.dialog.open(BoardEditComponent,
       {
-        data: { name, id },
+        data: { name: column.name, id: column.id },
         disableClose: true
       });
     dialogRef.afterClosed().pipe(
       filter(result => result.success),
       tap(console.log),
-      switchMap(result => this.boardapi.updateColumnById(id, result.name)),
+      switchMap(result => this.boardapi.updateColumnById(column.id, { ...column, name: result.name })),
       withLatestFrom(this.board$),
       switchMap(([_, board]) => this.boardapi.getBoardById(board.id)),
       tap(board => this.board$.next(board))

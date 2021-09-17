@@ -22,6 +22,7 @@ export class ColumnComponent implements OnInit {
   // tslint:disable-next-line: no-output-on-prefix
   @Output() onEditClick = new EventEmitter<{ name: string, id: string }>();
   @Output() onDeleteClick = new EventEmitter<string>();
+  @Output() onCardDeleteClick = new EventEmitter<string>();
   @Output() addItemCardClick = new EventEmitter();
   @Output() onItemCardMove = new EventEmitter<CdkDragDrop<any[]>>();
   ngOnInit(): void {
@@ -31,6 +32,9 @@ export class ColumnComponent implements OnInit {
   }
   openDeleteDialog(id: string): void {
     this.onDeleteClick.emit(id);
+  }
+  openCardDeleteDialog(id: string): void {
+    this.onCardDeleteClick.emit(id);
   }
   addItemCard(template): void {
     // add dialog ref

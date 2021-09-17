@@ -80,26 +80,37 @@ namespace ProjectPhoenix.Controllers
             return Ok(result);
         }
 
-       // PUT api/<ColumnsController>/5
+        // PUT api/<ColumnsController>/5
         [HttpPut("{id}")]
         public ActionResult Put(Guid id, [FromBody] ColumnPutDTOModel data)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Not a valid model");
             initUser();
-            var result = _context.Columns
+            var currColumn = _context.Columns
                             .Include(column => column.ItemCards)
-                            .Include(column => column.user)
                             .FirstOrDefault<Column>(column => column.id == id && column.user.Id == _user.Id);
 
-            if (result is not null)
+            if (currColumn is not null)
             {
-                result.name = data.name;
-                result.ItemCards = data.itemCards.ToList();
-                result.modifyDate = DateTime.Now;
-                var success = _context.SaveChanges();
-                return Ok(success);
 
+                try
+                {
+                    currColumn.name = data.name;
+                    currColumn.modifyDate = DateTime.Now;
+                    foreach (var currCard in currColumn.ItemCards)
+                    {
+                        var inCard = data.itemCards.Where(c => c.id == currCard.id).FirstOrDefault();
+                        currCard.Order = inCard.Order;
+                        currCard.modifyDate = DateTime.Now;
+                    }
+                    var success = _context.SaveChanges();
+                    return Ok(success);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, ex);
+                }
             }
             return NotFound(id);
         }

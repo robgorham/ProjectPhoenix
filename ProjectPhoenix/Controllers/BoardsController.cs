@@ -114,7 +114,7 @@ namespace ProjectPhoenix.Controllers
             _user_id = User.Claims.Where(c => c.Type == "sub").FirstOrDefault().Value;
             Board result = (Board)_context.Boards
                             .Include(board => board.Columns.OrderBy(c => c.order))
-                            .ThenInclude(column => column.ItemCards)
+                            .ThenInclude(column => column.ItemCards.OrderBy(i => i.Order))
                             .Include(board => board.user)
                             .Where(board => board.id == id && board.user.Id == _user_id)
                             .FirstOrDefault();

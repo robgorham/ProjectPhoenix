@@ -12,8 +12,13 @@
   <mat-card-content>
     <div cdkDropList [cdkDropListData]="column.itemCards" (cdkDropListDropped)="drop($event)" [cdkDropListConnectedTo]="linked" id={{column.id}}>
       <mat-card *ngFor="let card of column.itemCards;" cdkDrag [cdkDragData]="card">
-        <mat-card-subtitle>
-          {{card.name}}
+        <mat-card-subtitle class="card-header">
+          <div class="card-name">
+            {{card.name}}
+          </div>
+          <div>
+            <button mat-icon-button color="primary" (click)="openCardDeleteDialog(card.id)"><mat-icon size="xxs">delete</mat-icon></button>
+          </div>
         </mat-card-subtitle>
         <mat-card-content>
           {{card.id}}
