@@ -17,6 +17,7 @@
             {{card.name}}
           </div>
           <div>
+            <button mat-icon-button color="primary" (click)="openEditCardDialog(card)"><mat-icon>edit</mat-icon></button>
             <button mat-icon-button color="primary" (click)="openCardDeleteDialog(card.id)"><mat-icon size="xxs">delete</mat-icon></button>
           </div>
         </mat-card-subtitle>

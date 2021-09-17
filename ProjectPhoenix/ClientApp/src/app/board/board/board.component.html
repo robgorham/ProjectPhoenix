@@ -11,6 +11,7 @@
         <app-column cdkDropListGroup
                     (onItemCardMove)="onItemCardMoveEvent($event, board)"
                     (addItemCardClick)="onAddItemCardSubmit($event)"
+                    (onEditItemCard)="onEditItemCardSubmit($event)"
                     [linked]="getColumnIDs(board)"
                     (onDeleteClick)="deleteColumn($event)"
                     (onCardDeleteClick)="deleteCard($event)"

@@ -159,6 +159,11 @@ export class BoardComponent implements OnInit {
 
   }
 
+  onEditItemCardSubmit(event: any): void {
+    console.log(event);
+    this.boardapi.updateItemCardById(event).subscribe();
+  }
+
 
 
   deleteColumn(id: string): void {

@@ -7,6 +7,7 @@ import { filter, switchMap, tap } from 'rxjs/operators';
 import { BoardApiService } from '../board-api.service';
 import { BoardEditComponent } from '../board-edit/board-edit.component';
 import { IColumn } from '../board-models';
+import { ItemCardEditComponent } from '../item-card-edit/item-card-edit.component';
 
 @Component({
   selector: 'app-column',
@@ -23,6 +24,7 @@ export class ColumnComponent implements OnInit {
   @Output() onEditClick = new EventEmitter<{ name: string, id: string }>();
   @Output() onDeleteClick = new EventEmitter<string>();
   @Output() onCardDeleteClick = new EventEmitter<string>();
+  @Output() onEditItemCard = new EventEmitter<{name: string, id: string, description: string}>();
   @Output() addItemCardClick = new EventEmitter();
   @Output() onItemCardMove = new EventEmitter<CdkDragDrop<any[]>>();
   ngOnInit(): void {
@@ -50,6 +52,21 @@ export class ColumnComponent implements OnInit {
       })
     ).subscribe();
 
+  }
+
+  openEditCardDialog(card) {
+    const dialogRef = this.dialog.open(ItemCardEditComponent, {
+      data: {name: card.name, id: card.id, description: card.description },
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().pipe(
+      filter(result => result.success),
+      tap(res => {
+        console.log(res);
+        this.onEditItemCard.emit({ name: res.name, description: res.description, id: res.id });
+      })
+    ).subscribe();
   }
   drop(event: CdkDragDrop<any[]>) {
     //console.log(JSON.stringify(event))

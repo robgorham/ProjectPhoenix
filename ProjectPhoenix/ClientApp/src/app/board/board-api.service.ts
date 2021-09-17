@@ -20,6 +20,9 @@ export class BoardApiService {
     );
   }
 
+  updateItemCardById(putData: any): Observable<any> {
+    return this.http.put(this.baseUrl + 'api/itemcards/' + putData.id, {...putData}).pipe(tap(console.log))
+  }
   moveItemCardInArray(postData: any): Observable<any> {
     return this.http.post(this.baseUrl + 'api/itemcards/movebulk', { ...postData }).pipe(tap(console.log))
   }

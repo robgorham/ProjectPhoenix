@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Edit Card</h1>
+<div mat-dialog-content *ngIf="data">
+<pre>{{ data | json }}</pre>
+  <mat-form-field>
+    <mat-label>Name:</mat-label>
+    <input matInput id="card-name" name="card-name" [(ngModel)]="data.name" value="data.name">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Description</mat-label>
+    <input matInput id="card-description" name="card-description" [(ngModel)]="data.description" value="data.description" type="text">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button aria-hidden="false" [mat-dialog-close]="{success: false}">Cancel</button>
+  <button mat-raised-button aria-hidden="false" [mat-dialog-close]="{success: true, name: data.name, description: data.description, id: data.id}">Save</button>
+
+</div>
