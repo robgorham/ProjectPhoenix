@@ -55,7 +55,7 @@ namespace ProjectPhoenix
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                //app.DatabaseDeveloperPageExcet();
             }
             else
             {
