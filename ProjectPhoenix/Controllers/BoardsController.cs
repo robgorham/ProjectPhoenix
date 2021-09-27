@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ProjectPhoenix.Controllers
-{   
+{
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -26,7 +26,6 @@ namespace ProjectPhoenix.Controllers
             public BoardDTO(Board board)
             {
                 this.name = board.name;
-                //this.username = board.user.UserName;
                 this.id = board.id;
                 this.createDate = board.createDate;
                 this.modifyDate = board.modifyDate;
@@ -34,29 +33,29 @@ namespace ProjectPhoenix.Controllers
             }
             public string name { get; set; }
             public string username { get; set; }
-            public IList <Column> columns { get; set; }
+            public IList<Column> columns { get; set; }
         }
-        
+
 
         private ApplicationDbContext _context;
         private string _user_id;
-        public BoardsController (ApplicationDbContext context)
+        public BoardsController(ApplicationDbContext context)
         {
             _context = context;
         }
-        
+
 
         private void initUser()
         {
             _user_id = User.Claims.Where(c => c.Type == "sub").FirstOrDefault().Value;
         }
 
-        
+
         [HttpGet("seed/{quantity}")]
 
         public ActionResult Seed(int quantity)
         {
-            
+
             var _user = _context.Users.First<ApplicationUser>(u => u.Id == _user_id);
             var result = BoardsDbInitializer.Seed(_context, quantity, _user);
             return Ok(result);
@@ -83,28 +82,30 @@ namespace ProjectPhoenix.Controllers
         }
 
         // GET: api/<BoardsController>
-        [HttpGet]   
-        public IEnumerable<BoardDTO> Get()
+        [HttpGet]
+        public IEnumerable<Board> Get()
         {
             initUser();
+            var uid = Guid.Parse(_user_id);
             List<Board> boards = _context.Boards
-                                    .Include(board => board.user)
+                                    .Include(board => board.Columns)
+                                    .ThenInclude(column => column.ItemCards)
                                     .Where(board => board.user.Id == _user_id)
                                     .ToList();
             List<BoardDTO> result = new List<BoardDTO>();
-            foreach(Board board in boards)
+            foreach (Board board in boards)
             {
                 result.Add(new BoardDTO(board));
             }
 
-            if(result.Count() == 0)
+            if (result.Count() == 0)
             {
-                return Array.Empty<BoardDTO>();
+                return Array.Empty<Board>();
             }
-            return result;
+            return boards;
         }
 
-       
+
 
         // GET api/<BoardsController>/5
         [HttpGet("{id}")]
@@ -113,6 +114,8 @@ namespace ProjectPhoenix.Controllers
             _user_id = User.Claims.Where(c => c.Type == "sub").FirstOrDefault().Value;
             Board result = (Board)_context.Boards
                             .Include(board => board.Columns.OrderBy(c => c.order))
+                            .ThenInclude(column => column.ItemCards.OrderBy(i => i.Order))
+                            .Include(board => board.user)
                             .Where(board => board.id == id && board.user.Id == _user_id)
                             .FirstOrDefault();
             return new BoardDTO(result);
@@ -123,13 +126,15 @@ namespace ProjectPhoenix.Controllers
         public void Post([FromBody] PutModel data)
         {
             var value = data.name;
+            initUser();
             var _user = _context.Users.First<ApplicationUser>(u => u.Id == _user_id);
             var added = new Board { createDate = DateTime.Now, modifyDate = DateTime.Now, id = Guid.NewGuid(), name = value, user = _user };
             _context.Add(added);
             _context.SaveChanges();
         }
 
-        public class PutModel {
+        public class PutModel
+        {
             public PutModel() { }
             public string name { get; set; }
             public Board board { get; set; } = null;
@@ -141,18 +146,32 @@ namespace ProjectPhoenix.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Not a valid model");
             initUser();
-            var result = _context.Boards
-                            //.Include(board => board.Columns.OrderBy(c => c.order))
+
+            var currBoard = _context.Boards
+                            .Include(board => board.Columns.OrderBy(c => c.order))
                             .FirstOrDefault<Board>(board => board.id == id && board.user.Id == _user_id);
-            
-            if(result is not null)
+
+            if (currBoard is not null)
             {
-                result.name = data.name;
-                result.modifyDate = DateTime.Now;
-                 result.Columns = data.board.Columns;
-                var success = _context.SaveChanges();
-                
-                return Ok(success);
+                try
+                {
+                    currBoard.name = data.board.name;
+                    currBoard.modifyDate = DateTime.Now;
+                    for (var i = 0; i < currBoard.Columns.Count(); i++)
+                    {
+                        var currCol = currBoard.Columns[i];
+                        var inCol = data.board.Columns.Where(varcol => varcol.id == currCol.id).FirstOrDefault();
+                        currCol.order = inCol.order;
+                        currCol.modifyDate = DateTime.Now;
+                    }
+
+                    var success = _context.SaveChanges();
+                    return Ok(success);
+                }
+                catch (Exception er)
+                {
+                    return Ok(er.Message);
+                }
 
             }
             return NotFound(id);
@@ -202,7 +221,6 @@ namespace ProjectPhoenix.Controllers
                 };
                 candidateBoard.Columns.Add(added);
                 candidateBoard.modifyDate = DateTime.Now;
-                _context.Columns.Add(added);
                 _context.Entry<Board>(candidateBoard).State = EntityState.Modified;
                 try
                 {

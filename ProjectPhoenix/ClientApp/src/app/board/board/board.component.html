@@ -4,13 +4,18 @@
     <button mat-icon-button aria-hidden="false" color="primary" (click)="onAddColumnClick(board)" ><mat-icon>add</mat-icon></button>
   </div>
 
-  <div cdkDropListGroup class="list-group">
-    <cdk-virtual-scroll-viewport  orientation="horizontal" itemSize="20" class="column-list-viewport">
+  <div  class="list-group">
+    <cdk-virtual-scroll-viewport  orientation="horizontal" itemSize="2" class="column-list-viewport">
       <!-- #TODO Create a column component -->
       <div cdkDropList [cdkDropListData]="board.columns" cdkDropListOrientation="horizontal" (cdkDropListDropped)="onColumnMove($event, board)" class="column-list">
-        <app-column
-                    (onDeleteClick)="deleteColumn(column.id)"
-                    (onEditClick)="openColumnEditDialog(column.name, column.id)" *cdkVirtualFor="let column of board.columns" [column]="column" class="board-column mat-elevation-z3" cdkDrag>
+        <app-column cdkDropListGroup
+                    (onItemCardMove)="onItemCardMoveEvent($event, board)"
+                    (addItemCardClick)="onAddItemCardSubmit($event)"
+                    (onEditItemCard)="onEditItemCardSubmit($event)"
+                    [linked]="getColumnIDs(board)"
+                    (onDeleteClick)="deleteColumn($event)"
+                    (onCardDeleteClick)="deleteCard($event)"
+                    (onEditClick)="openColumnEditDialog(column)" *cdkVirtualFor="let column of board.columns" [cdkDragData]="column" [column]="column" class="board-column mat-elevation-z3" cdkDrag>
           
         </app-column>
       </div>
@@ -20,8 +25,6 @@
   </div>
 </ng-container>
 <ng-template #noBoard>
-  oB
-  at
   <mat-card>
     <mat-card-title>
       Sorry

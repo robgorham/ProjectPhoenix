@@ -15,7 +15,6 @@ import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
-import { BoardManagerComponent } from './board/board-manager/board-manager.component';
 //#endregion
 @NgModule({
   declarations: [

@@ -17,10 +17,11 @@ import { BoardEditComponent } from './board-edit/board-edit.component';
 import { FormsModule } from '@angular/forms';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ColumnComponent } from './column/column.component';
+import { ItemCardEditComponent } from './item-card-edit/item-card-edit.component';
 
 
 @NgModule({
-  declarations: [BoardComponent, BoardManagerComponent, BoardEditComponent, ColumnComponent],
+  declarations: [BoardComponent, BoardManagerComponent, BoardEditComponent, ColumnComponent, ItemCardEditComponent],
   imports: [
     CommonModule,
     DragDropModule,

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/internal/operators/tap';
-import { IBoard } from './board-models';
+import { IBoard, IColumn } from './board-models';
 
 
 @Injectable({
@@ -10,18 +10,39 @@ import { IBoard } from './board-models';
 })
 export class BoardApiService {
 
-  constructor(private http: HttpClient,  @Inject('BASE_URL') private baseUrl: string) {
+  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
 
   }
 
-  addColumn(board: IBoard, name: string) : Observable<any> {
+  addItemCardToColumnById(boardId: any, columnId: any, name: string): Observable<any> {
+    return this.http.post(this.baseUrl + 'api/itemcards', { boardId, columnId, name }).pipe(
+      tap(res => console.log(JSON.stringify(res)))
+    );
+  }
+
+  updateItemCardById(putData: any): Observable<any> {
+    return this.http.put(this.baseUrl + 'api/itemcards/' + putData.id, {...putData}).pipe(tap(console.log))
+  }
+  moveItemCardInArray(postData: any): Observable<any> {
+    return this.http.post(this.baseUrl + 'api/itemcards/movebulk', { ...postData }).pipe(tap(console.log))
+  }
+
+
+
+  deleteItemCardById(cardId: any) {
+    return this.http.delete(this.baseUrl + 'api/itemcards/' + cardId).pipe(
+      tap(console.log)
+    );
+  }
+
+  addColumn(board: IBoard, name: string): Observable<any> {
     return this.http.post(this.baseUrl + 'api/boards/' + board.id + '/columns', { name }).pipe(
       tap(res => console.log(JSON.stringify(res)))
     );
   }
 
-  updateColumnById(id: string, name: string){
-    return this.http.put<number>(this.baseUrl + 'api/columns/' + id, { name }).pipe(
+  updateColumnById(id: string, column: IColumn) {
+    return this.http.put<number>(this.baseUrl + 'api/columns/' + id, column).pipe(
       tap(console.log)
     );
   }
@@ -32,7 +53,7 @@ export class BoardApiService {
     );
   }
 
-  getBoards(): Observable<IBoard[]>{
+  getBoards(): Observable<IBoard[]> {
     return this.http.get<IBoard[]>(this.baseUrl + 'api/boards').pipe(
       tap(console.log)
     );

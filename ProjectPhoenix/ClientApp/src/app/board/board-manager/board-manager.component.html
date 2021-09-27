@@ -10,7 +10,7 @@
       <a [routerLink]="['/boards/', board.id]" matToolTip="Open Board">
         <button mat-icon-button class="mat-elevation-z3" aria-hidden="false" color="primary" aria-label="Open" matRipple><mat-icon>dashboard</mat-icon></button>
       </a>
-      <button mat-icon-button class="mat-elevation-z3" style="margin-left:.25em;" aria-hidden="false" color="primary" aria-label="Edit" (click)="openEditDialog(board.name, board.id)" matRipple><mat-icon>edit</mat-icon></button>
+      <button mat-icon-button class="mat-elevation-z3" style="margin-left:.25em;" aria-hidden="false" color="primary" aria-label="Edit" (click)="openEditDialog(board)" matRipple><mat-icon>edit</mat-icon></button>
       <button mat-icon-button class="mat-elevation-z3" style="margin-left:.25em;"aria-hidden="false" color="warn" (click)="deleteBoard(board.id)" aria-label="Delete" matRipple ><mat-icon>delete</mat-icon></button>
     </div>
   </mat-card>

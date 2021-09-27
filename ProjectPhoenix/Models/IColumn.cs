@@ -10,5 +10,6 @@ namespace ProjectPhoenix.Models
         string name { get; set; }
         int order { get; set; }
         Guid BoardId { get; set; }
+        IList<ItemCard> ItemCards { get; set; }
     }
 }

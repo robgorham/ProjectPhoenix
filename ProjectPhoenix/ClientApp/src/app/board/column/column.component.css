@@ -3,7 +3,9 @@
     justify-content: space-between;
   }
     .column-header .column-name {
-      padding-top: .1em;
+      vertical-align: central;
+      padding-top: .5em;
+      font-size:medium;
     }
     .column-header .column-buttons {
       display: flex;
@@ -11,4 +13,21 @@
       .column-header .column-buttons mat-icon {
         margin-right: .1em;
       }
-    
+
+.item-cards-list {
+  display: flex;
+  width: 100px;
+  min-height: 50px;
+  flex-direction: column;
+}
+
+.card {
+  min-width: 100px;
+  margin: .2em 0 0 .2em;
+  min-height: 50px;
+}
+.card-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

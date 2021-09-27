@@ -1,11 +1,50 @@
-<mat-card>
-    <mat-card-title class="column-header">
-      <p class="column-name">
-        {{column.name}}
-      </p>
-      <div class="column-buttons">
-        <button mat-icon-button color="primary"  aria-label="Edit"  (click)="openEditDialog(column.name, column.id)"><mat-icon>edit</mat-icon></button>
-        <button mat-icon-button color="warn" (click)="openDeleteDialog(column.id)"><mat-icon>delete</mat-icon></button>
-      </div>
-    </mat-card-title>
-  </mat-card>
+<mat-card class="mat-elevation-z4">
+  <mat-card-subtitle>
+    <div class="column-name">
+      {{column.name}}
+    </div>
+    <div class="column-buttons">
+      <button mat-icon-button aria-label="Add Item" (click)="addItemCard(createCard)"><mat-icon>add</mat-icon></button>
+      <button mat-icon-button color="primary" aria-label="Edit" (click)="openEditDialog(column.name, column.id)"><mat-icon>edit</mat-icon></button>
+      <button mat-icon-button color="warn" (click)="openDeleteDialog(column.id)"><mat-icon>delete</mat-icon></button>
+    </div>
+  </mat-card-subtitle>
+  <mat-card-content>
+    <div cdkDropList [cdkDropListData]="column.itemCards" (cdkDropListDropped)="drop($event)" [cdkDropListConnectedTo]="linked" id={{column.id}}>
+      <mat-card *ngFor="let card of column.itemCards;" cdkDrag [cdkDragData]="card" class="mat-elevation-z6 card">
+        <mat-card-subtitle class="card-header">
+          <div class="card-name">
+            {{card.name}}
+          </div>
+          <div>
+            <button mat-icon-button color="primary" (click)="openEditCardDialog(card)"><mat-icon>edit</mat-icon></button>
+            <button mat-icon-button color="primary" (click)="openCardDeleteDialog(card.id)"><mat-icon size="xxs">delete</mat-icon></button>
+          </div>
+        </mat-card-subtitle>
+        <mat-card-content>
+          {{card.description}}
+        </mat-card-content>
+      </mat-card>
+      <mat-card *ngIf="column.itemCards.length < 1">
+        Empty Column!
+      </mat-card>
+    </div>
+  </mat-card-content>
+
+</mat-card>
+<ng-template #createCard>
+  <form>
+    <h1 mat-dialog-title>Create Card</h1>
+    <div mat-dialog-content>
+      <mat-form-field>
+        <mat-label>Card Name:</mat-label>
+        <input matInput id="board-name" name="board-name" placeholder="Card Name" #boardName>
+      </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-raised-button aria-hidden="false" [mat-dialog-close]="{success: false}">Cancel</button>
+      <button mat-raised-button aria-hidden="false" [mat-dialog-close]="{success: true, name: boardName.value}">Save</button>
+
+    </div>
+  </form>
+</ng-template>

@@ -1,8 +1,9 @@
 .list-group {
-  width: 960px;
-  background-color: antiquewhite;
+  min-width: 480px;
+  background-color: lightgrey;
   width: 100%;
-  min-height: 600px;
+
+  min-height: 400px;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
@@ -14,8 +15,8 @@
 }
 
 .board-column {
-  width: 200px;
-  margin: 1em;
+  width: 250px;
+  margin: .2em 0 0 .2em;
 }
 .cdk-drag-preview {
   box-sizing: border-box;
@@ -26,7 +27,7 @@
   opacity: 0.2;
 }
 .column-list-viewport {
-  max-height: 800px;
+  max-height: 1200px;
   width: 100%;
 }
 .cdk-drag-animating {
@@ -38,4 +39,3 @@
   flex-direction: row;
 }
 
-  

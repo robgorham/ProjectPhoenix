@@ -20,5 +20,6 @@ namespace ProjectPhoenix.Data
         public DbSet<Board> Boards { get; set; }
         public DbSet<Column> Columns { get; set; }
         public DbSet<ApplicationUser> AppUsers {get; set;}
+        public DbSet<ItemCard> ItemCards { get; set; }
     }
 }
