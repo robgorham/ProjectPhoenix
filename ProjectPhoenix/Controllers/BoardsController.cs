@@ -83,7 +83,7 @@ namespace ProjectPhoenix.Controllers
 
         // GET: api/<BoardsController>
         [HttpGet]
-        public IEnumerable<Board> Get()
+        public IEnumerable<BoardDTO> Get()
         {
             initUser();
             var uid = Guid.Parse(_user_id);
@@ -100,9 +100,9 @@ namespace ProjectPhoenix.Controllers
 
             if (result.Count() == 0)
             {
-                return Array.Empty<Board>();
+                return Array.Empty<BoardDTO>();
             }
-            return boards;
+            return result;
         }
 
 

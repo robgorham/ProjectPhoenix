@@ -9,7 +9,8 @@ namespace ProjectPhoenix.Models
     {
         public string name { get; set; }
         public int order { get; set; }
-        public virtual Guid BoardId {get; set;}
+        public Guid BoardId {get; set;}
+        public Board Board { get; set; }
         public virtual IList<ItemCard> ItemCards { get; set; }
         public ApplicationUser user { get; set; }
     }
