@@ -1,4 +1,7 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
+import { RouterModule } from '@angular/router';
 
 import { BoardManagerComponent } from './board-manager.component';
 
@@ -8,7 +11,12 @@ describe('BoardManagerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BoardManagerComponent ]
+      imports: [RouterModule.forRoot([]), MatDialogModule, HttpClientTestingModule],
+      declarations: [BoardManagerComponent],
+      providers: [
+        { provide: 'BASE_URL', useValue: 'http://localhost' },
+
+      ]
     })
     .compileComponents();
   }));
