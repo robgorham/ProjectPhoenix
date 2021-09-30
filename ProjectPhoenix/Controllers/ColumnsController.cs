@@ -122,6 +122,7 @@ namespace ProjectPhoenix.Controllers
             var _user_id = User.Claims.Where(c => c.Type == "sub").FirstOrDefault().Value;
             Column result = _context.Columns
                                 .Where(column => column.id == id && column.user.Id == _user_id)
+                                .Include(column => column.ItemCards)
                                 .FirstOrDefault();
             if (result != null)
             {

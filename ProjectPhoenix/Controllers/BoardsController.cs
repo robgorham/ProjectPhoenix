@@ -183,7 +183,10 @@ namespace ProjectPhoenix.Controllers
         {
             initUser();
             var result = _context.Boards
-                            .FirstOrDefault<Board>(board => board.id == id && board.user.Id == _user_id);
+                            .Where(board => board.id == id && board.user.Id == _user_id)
+                            .Include(board => board.Columns)
+                            .ThenInclude(column => column.ItemCards)
+                            .FirstOrDefault();
             if (result != null)
             {
                 _context.Entry(result).State = EntityState.Deleted;
