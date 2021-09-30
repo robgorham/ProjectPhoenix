@@ -119,9 +119,10 @@ export class BoardComponent implements OnInit {
       console.log('different')
       console.log(postData)
       this.boardapi.moveItemCardInArray(postData).pipe(
-        tap(console.log)
+        switchMap(result => this.boardapi.getBoardById(board.id)),
+        tap(board => this.board$.next(board))
       ).subscribe();
-        ;
+        
     }
     // must broadcast the result
     // must update the board
@@ -140,7 +141,10 @@ export class BoardComponent implements OnInit {
     moveItemInArray(board.columns, event.previousIndex, event.currentIndex);
     const boardResult = { ...board, columns: [...cols.map((column, idx) => ({ ...column, order: idx }))] };
     this.board$.next(boardResult);
-    this.boardapi.updateBoardById(boardResult.id, boardResult).subscribe();
+    this.boardapi.updateBoardById(boardResult.id, boardResult).pipe(
+      switchMap(result => this.boardapi.getBoardById(board.id)),
+      tap(board => this.board$.next(board))
+    ).subscribe();
   }
   openColumnEditDialog(column: IColumn): void {
     const dialogRef = this.dialog.open(BoardEditComponent,
