@@ -2,14 +2,16 @@
 <div mat-dialog-content>
 <!--<pre>{{ data | json }}</pre>-->
 <form>
-  <mat-form-field>
-    <mat-label>Name:</mat-label>
-    <input matInput id="card-name" name="card-name" [(ngModel)]="data.name" value="data.name">
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Description</mat-label>
-    <textarea matInput id="card-description" name="card-description" [(ngModel)]="data.description" value="data.description" type="text"></textarea>
-  </mat-form-field>
+  <div style="display:flex; flex-direction:column">
+    <mat-form-field>
+      <mat-label>Name:</mat-label>
+      <input matInput id="card-name" name="card-name" [(ngModel)]="data.name" value="data.name">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <textarea matInput id="card-description" name="card-description" [(ngModel)]="data.description" value="data.description" type="text"></textarea>
+    </mat-form-field>
+  </div>
 </form>
 </div>
 <div mat-dialog-actions>

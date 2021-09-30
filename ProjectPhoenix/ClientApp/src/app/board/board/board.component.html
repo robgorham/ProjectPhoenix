@@ -1,7 +1,13 @@
 <ng-container *ngIf="(board$ | async ) as board else noBoard">
   <div id="board-header">
-    <h4 cdkDragHandle>{{board.name}}: {{board.createDate}}</h4>
-    <button mat-icon-button aria-hidden="false" color="primary" (click)="onAddColumnClick(board)" ><mat-icon>add</mat-icon></button>
+    <div cdkDragHandle id="board-name">{{board.name}}</div>
+    <div id="board-details">
+      <div id="board-date">
+        {{board.createDate}}
+        <button mat-icon-button aria-hidden="false" color="primary" (click)="onAddColumnClick(board)"><mat-icon>add</mat-icon></button>
+      </div>
+    </div>
+    
   </div>
 
   <div  class="list-group">
@@ -15,7 +21,7 @@
                     [linked]="getColumnIDs(board)"
                     (onDeleteClick)="deleteColumn($event)"
                     (onCardDeleteClick)="deleteCard($event)"
-                    (onEditClick)="openColumnEditDialog(column)" *cdkVirtualFor="let column of board.columns" [cdkDragData]="column" [column]="column" class="board-column mat-elevation-z3" cdkDrag>
+                    (onEditClick)="openColumnEditDialog(column)" *cdkVirtualFor="let column of board.columns" [cdkDragData]="column" [column]="column" class="board-column" cdkDrag>
           
         </app-column>
       </div>
